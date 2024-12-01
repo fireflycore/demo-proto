@@ -1,5 +1,5 @@
 version: v2
-name: buf.build/lhdhtrc/kratos # 刚才创建的BSR
+name: buf.build/firefly/demo # 刚才创建的BSR
 lint:
   use:
     - STANDARD
