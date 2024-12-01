@@ -47,17 +47,19 @@ message Demo {
 
   string title = 4;
   string description = 5;
-  uint32 status = 6;
-  uint32 sort = 7;
+  string content = 6;
+  uint32 status = 7;
+  uint32 sort = 8;
 
-  Author author = 8;
+  Author author = 9;
 }
 
 message CreateRequest {
   string title = 1 [(buf.validate.field).required = true];
   string description = 2;
-  uint32 status = 3;
-  uint32 sort = 4;
+  string content = 3;
+  uint32 status = 4;
+  uint32 sort = 5;
 }
 message CreateResponse {
   uint32 code = 1;
@@ -92,8 +94,9 @@ message UpdateRequest {
   string id = 1 [(buf.validate.field).string.uuid = true];
   string title = 2 [(buf.validate.field).required = true];
   string description = 3;
-  uint32 status = 4;
-  uint32 sort = 5;
+  string content = 4;
+  uint32 status = 5;
+  uint32 sort = 6;
 }
 message UpdateResponse {
   string message = 1;
