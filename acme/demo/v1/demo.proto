@@ -6,7 +6,7 @@ import "buf/validate/validate.proto";
 import "google/api/annotations.proto";
 
 service DemoService {
-  rpc Create(CreateRequest) returns (CreateResponse) {
+  rpc Save(SaveRequest) returns (SaveResponse) {
     option (google.api.http) = {
       post: "/v1/demo",
       body: "*",
@@ -54,14 +54,14 @@ message Demo {
   Author author = 9;
 }
 
-message CreateRequest {
+message SaveRequest {
   string title = 1 [(buf.validate.field).required = true];
   string description = 2;
   string content = 3;
   uint32 status = 4;
   uint32 sort = 5;
 }
-message CreateResponse {
+message SaveResponse {
   uint32 code = 1;
   string message = 2;
 }
