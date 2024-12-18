@@ -6,17 +6,17 @@ import "google/api/annotations.proto";
 
 service OperationLoggerService {
   rpc Create(CreateRequest) returns (CreateResponse) {};
-  rpc Get(GetRequest) returns (GetResponse) {
+  rpc FindById(FindByIdRequest) returns (FindByIdResponse) {
     option (google.api.http) = {
       get: "/v1/logger/operation/{id}"
     };
   };
-  rpc GetList(GetListRequest) returns (GetListResponse) {
+  rpc FindList(FindListRequest) returns (FindListResponse) {
     option (google.api.http) = {
       get: "/v1/logger/operation/list"
     };
   };
-  rpc Delete(DeleteRequest) returns (DeleteResponse) {
+  rpc DeleteById(DeleteByIdRequest) returns (DeleteByIdResponse) {
     option (google.api.http) = {
       delete: "/v1/logger/operation/{id}"
     };
@@ -56,20 +56,20 @@ message CreateResponse {
   uint32 code = 2;
 }
 
-message GetRequest {
+message FindByIdRequest {
   string id = 1;
 }
-message GetResponse {
+message FindByIdResponse {
   string message = 1;
   uint32 code = 2;
   Operation data = 3;
 }
 
-message GetList {
+message List {
   int64 total = 1;
   repeated Operation list = 2;
 }
-message GetListRequest {
+message FindListRequest {
   uint64 page = 1;
   uint64 page_size = 2;
   string search_key = 3;
@@ -85,16 +85,16 @@ message GetListRequest {
   string invoke_app_id = 11;
   string id = 12;
 }
-message GetListResponse {
+message FindListResponse {
   string message = 1;
   uint32 code = 2;
-  GetList data = 3;
+  List data = 3;
 }
 
-message DeleteRequest {
+message DeleteByIdRequest {
   string id = 1;
 }
-message DeleteResponse {
+message DeleteByIdResponse {
   string message = 1;
   uint32 code = 2;
 }

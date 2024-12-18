@@ -6,17 +6,17 @@ import "google/api/annotations.proto";
 
 service ServerLoggerService {
   rpc Create(CreateRequest) returns (CreateResponse) {};
-  rpc Get(GetRequest) returns (GetResponse) {
+  rpc FindById(FindByIdRequest) returns (FindByIdResponse) {
     option (google.api.http) = {
       get: "/v1/logger/server/{id}"
     };
   };
-  rpc GetList(GetListRequest) returns (GetListResponse) {
+  rpc FindList(FindListRequest) returns (FindListResponse) {
     option (google.api.http) = {
       get: "/v1/logger/server/list"
     };
   };
-  rpc Delete(DeleteRequest) returns (DeleteResponse) {
+  rpc DeleteById(DeleteByIdRequest) returns (DeleteByIdResponse) {
     option (google.api.http) = {
       delete: "/v1/logger/server/{id}"
     };
@@ -45,20 +45,20 @@ message CreateResponse {
   uint32 code = 2;
 }
 
-message GetRequest {
+message FindByIdRequest {
   string id = 1;
 }
-message GetResponse {
+message FindByIdResponse {
   string message = 1;
   uint32 code = 2;
   Server data = 3;
 }
 
-message GetList {
+message List {
   int64 total = 1;
   repeated Server list = 2;
 }
-message GetListRequest {
+message FindListRequest {
   uint64 page = 1;
   uint64 page_size = 2;
   string level  = 3;
@@ -68,16 +68,16 @@ message GetListRequest {
   string app_id = 7;
   string id = 8;
 }
-message GetListResponse {
+message FindListResponse {
   string message = 1;
   uint32 code = 2;
-  GetList data = 3;
+  List data = 3;
 }
 
-message DeleteRequest {
+message DeleteByIdRequest {
   string id = 1;
 }
-message DeleteResponse {
+message DeleteByIdResponse {
   string message = 1;
   uint32 code = 2;
 }

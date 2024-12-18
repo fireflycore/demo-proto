@@ -11,17 +11,17 @@ service ClientLoggerService {
       body: "*",
     };
   };
-  rpc Get(GetRequest) returns (GetResponse) {
+  rpc FindById(FindByIdRequest) returns (FindByIdResponse) {
     option (google.api.http) = {
       get: "/v1/logger/client/{id}"
     };
   };
-  rpc GetList(GetListRequest) returns (GetListResponse) {
+  rpc GetList(FindListRequest) returns (FindListResponse) {
     option (google.api.http) = {
       get: "/v1/logger/client/list"
     };
   };
-  rpc Delete(DeleteRequest) returns (DeleteResponse) {
+  rpc Delete(DeleteByIdRequest) returns (DeleteByIdResponse) {
     option (google.api.http) = {
       delete: "/v1/logger/client/{id}"
     };
@@ -60,20 +60,20 @@ message CreateResponse {
   uint32 code = 2;
 }
 
-message GetRequest {
+message FindByIdRequest {
   string id = 1;
 }
-message GetResponse {
+message FindByIdResponse {
   string message = 1;
   uint32 code = 2;
   Client data = 3;
 }
 
-message GetList {
+message List {
   int64 total = 1;
   repeated Client list = 2;
 }
-message GetListRequest {
+message FindListRequest {
   uint64 page = 1;
   uint64 page_size = 2;
   string search_key = 3;
@@ -90,16 +90,16 @@ message GetListRequest {
   string app_id = 12;
   string id = 13;
 }
-message GetListResponse {
+message FindListResponse {
   string message = 1;
   uint32 code = 2;
-  GetList data = 3;
+  List data = 3;
 }
 
-message DeleteRequest {
+message DeleteByIdRequest {
   string id = 1;
 }
-message DeleteResponse {
+message DeleteByIdResponse {
   string message = 1;
   uint32 code = 2;
 }
