@@ -4,12 +4,26 @@ package acme.demo.v1;
 
 import "buf/validate/validate.proto";
 import "google/api/annotations.proto";
+import "protoc-gen-swagger/options/annotations.proto";
 
 service DemoService {
   rpc Create(CreateRequest) returns (CreateResponse) {
     option (google.api.http) = {
       post: "/v1/demo",
       body: "*",
+    };
+    option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+      tags: ["demo"];
+      operation_id: "create_demo";
+      summary: "创建示例";
+      description: "创建示例详细描述";
+      deprecated: true; // 废弃
+      responses: {
+        key: "200";
+        value: {
+          description: "创建成功";
+        };
+      }
     };
   };
   rpc FindById(FindByIdRequest) returns (FindByIdResponse) {
@@ -55,11 +69,32 @@ message Demo {
 }
 
 message CreateRequest {
-  string title = 1 [(buf.validate.field).required = true];
-  string description = 2;
-  string content = 3;
-  uint32 status = 4;
-  uint32 sort = 5;
+  string title = 1 [
+    (buf.validate.field).required = true,
+    (grpc.gateway.protoc_gen_swagger.options.openapiv2_field) = {
+      description: "标题"
+    }
+  ];
+  string description = 2 [
+    (grpc.gateway.protoc_gen_swagger.options.openapiv2_field) = {
+      description: "描述"
+    }
+  ];
+  string content = 3 [
+    (grpc.gateway.protoc_gen_swagger.options.openapiv2_field) = {
+      description: "内容"
+    }
+  ];
+  uint32 status = 4 [
+    (grpc.gateway.protoc_gen_swagger.options.openapiv2_field) = {
+      description: "状态"
+    }
+  ];
+  uint32 sort = 5 [
+    (grpc.gateway.protoc_gen_swagger.options.openapiv2_field) = {
+      description: "排序"
+    }
+  ];
 }
 message CreateResponse {
   uint32 code = 1;
@@ -110,3 +145,32 @@ message DeleteByIdResponse {
   string message = 1;
   uint32 code = 2;
 }
+
+// 定义Swagger元信息
+option (grpc.gateway.protoc_gen_swagger.options.openapiv2_swagger) = {
+  info: {
+    title: "DemoService";
+    version: "1.0.0";
+    description: "示例服务";
+    contact: {
+      name: "梨花炖海棠";
+      url: "https://github.com/lhdhtrc";
+      email: "lhdhtr@gmail.com";
+    };
+  };
+  security_definitions: {
+    security: {
+      key: "Authorization"
+      value: {
+        name: "Authorization"
+        in: IN_HEADER
+        type: TYPE_API_KEY
+      }
+    }
+  }
+  host: "192.168.1.100:10000";
+  base_path: "/api";
+  schemes: [HTTP];
+  consumes: "application/json";
+  produces: "application/json";
+};
