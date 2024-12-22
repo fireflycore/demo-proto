@@ -4,7 +4,7 @@ package acme.demo.v1;
 
 import "buf/validate/validate.proto";
 import "google/api/annotations.proto";
-import "protoc-gen-swagger/options/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
 
 service DemoService {
   rpc Create(CreateRequest) returns (CreateResponse) {
@@ -12,7 +12,7 @@ service DemoService {
       post: "/v1/demo",
       body: "*",
     };
-    option (grpc.gateway.protoc_gen_swagger.options.openapiv2_operation) = {
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
       tags: ["demo"];
       operation_id: "create_demo";
       summary: "创建示例";
@@ -71,27 +71,27 @@ message Demo {
 message CreateRequest {
   string title = 1 [
     (buf.validate.field).required = true,
-    (grpc.gateway.protoc_gen_swagger.options.openapiv2_field) = {
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
       description: "标题"
     }
   ];
   string description = 2 [
-    (grpc.gateway.protoc_gen_swagger.options.openapiv2_field) = {
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
       description: "描述"
     }
   ];
   string content = 3 [
-    (grpc.gateway.protoc_gen_swagger.options.openapiv2_field) = {
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
       description: "内容"
     }
   ];
   uint32 status = 4 [
-    (grpc.gateway.protoc_gen_swagger.options.openapiv2_field) = {
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
       description: "状态"
     }
   ];
   uint32 sort = 5 [
-    (grpc.gateway.protoc_gen_swagger.options.openapiv2_field) = {
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
       description: "排序"
     }
   ];
@@ -147,7 +147,7 @@ message DeleteByIdResponse {
 }
 
 // 定义Swagger元信息
-option (grpc.gateway.protoc_gen_swagger.options.openapiv2_swagger) = {
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
   info: {
     title: "DemoService";
     version: "1.0.0";
