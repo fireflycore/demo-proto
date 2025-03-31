@@ -1,0 +1,20 @@
+syntax="proto3";
+
+package acme.basic.v1;
+
+// 日志级别
+enum LoggerLevel {
+  LOGGER_LEVEL_UNSPECIFIED = 0;
+  // 普通
+  LOGGER_LEVEL_INFO = 1;
+  // 成功
+  LOGGER_LEVEL_SUCCESS = 2;
+  // 告警
+  LOGGER_LEVEL_WARNING = 3;
+  // 错误
+  LOGGER_LEVEL_ERROR = 4;
+  // 异常
+  LOGGER_LEVEL_PANIC = 5;
+  // 调试
+  LOGGER_LEVEL_DEBUG = 6;
+}

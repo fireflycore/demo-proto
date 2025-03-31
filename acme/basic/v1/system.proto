@@ -1,0 +1,13 @@
+syntax="proto3";
+
+package acme.basic.v1;
+
+// 系统类型
+enum SystemType {
+  SYSTEM_TYPE_UNSPECIFIED = 0;
+  SYSTEM_TYPE_WINDOWS = 1;
+  SYSTEM_TYPE_MACOS = 2;
+  SYSTEM_TYPE_LINUX = 3;
+  SYSTEM_TYPE_ANDROID = 4;
+  SYSTEM_TYPE_IOS = 5;
+}

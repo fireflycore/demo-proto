@@ -1,0 +1,18 @@
+syntax="proto3";
+
+package acme.basic.v1;
+
+// 客户端类型
+enum ClientType {
+  CLIENT_TYPE_UNSPECIFIED = 0;
+  // 网页浏览器
+  CLIENT_TYPE_WEB_BROWSER = 1;
+  // 移动应用
+  CLIENT_TYPE_MOBILE_APP = 2;
+  // 桌面应用
+  CLIENT_TYPE_DESKTOP_APP = 3;
+  // 服务端
+  CLIENT_TYPE_SERVER = 4;
+  // 嵌入式系统
+  CLIENT_TYPE_EMBEDDED = 5;
+}
