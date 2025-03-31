@@ -3,19 +3,57 @@ syntax="proto3";
 package acme.logger.access.v1;
 
 import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+import "acme/basic/v1/request.proto";
+import "acme/basic/v1/system.proto";
+import "acme/basic/v1/client.proto";
+import "acme/basic/v1/device.proto";
+
+// 定义Swagger元信息
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  info: {
+    title: "AccessLogger";
+    version: "1.0.0";
+    description: "访问日志";
+    contact: {
+      name: "梨花炖海棠";
+      url: "https://github.com/lhdhtrc";
+      email: "lhdhtr@gmail.com";
+    };
+  };
+  security_definitions: {
+    security: {
+      key: "Authorization"
+      value: {
+        name: "Authorization"
+        in: IN_HEADER
+        type: TYPE_API_KEY
+      }
+    }
+  }
+  host: "192.168.1.100:10000";
+  base_path: "/api";
+  schemes: [HTTP];
+  consumes: "application/json";
+  produces: "application/json";
+};
 
 service AccessLoggerService {
   rpc Create(CreateRequest) returns (CreateResponse) {};
+  // 根据日志id查询访问日志详情
   rpc FindById(FindByIdRequest) returns (FindByIdResponse) {
     option (google.api.http) = {
       get: "/v1/logger/access/{id}"
     };
   };
+  // 查询访问日志列表
   rpc FindList(FindListRequest) returns (FindListResponse) {
     option (google.api.http) = {
       get: "/v1/logger/access/list"
     };
   };
+  // 根据id删除访问日志
   rpc DeleteById(DeleteByIdRequest) returns (DeleteByIdResponse) {
     option (google.api.http) = {
       delete: "/v1/logger/access/{id}"
@@ -24,46 +62,90 @@ service AccessLoggerService {
 }
 
 message Access {
-  string id = 1;
-  string created_at = 2;
+  // 请求方式
+  basic.v1.RequestMethod method = 1;
+  // 请求路径
+  string path = 2;
+  // 原始请求内容
+  string request = 3;
+  // 原始响应内容
+  string response = 4;
+  // 耗时
+  uint64 duration = 5;
+  // 状态码
+  uint32 status = 6;
 
-  string client_name = 3;
-  string client_type = 4;
-  string client_system = 5;
+  // 请求ip
+  string ip = 7;
+  // 请求地址
+  string address = 8;
 
-  string method = 6;
-  string path = 7;
-  string request = 8;
-  string response = 9;
-  uint32 status = 10;
-  string timer = 11;
+  // 系统类型
+  basic.v1.SystemType system_type = 9;
+  // 客户端类型
+  basic.v1.ClientType client_type = 10;
+  // 设备形态
+  basic.v1.DeviceFormFactor device_form_factor = 11;
 
-  string ip = 12;
-  string address = 13;
+  // 客户端名称
+  string client_name = 12;
+  // 客户端版本
+  string client_version = 13;
+  // 系统名称
+  string system_name = 14;
+  // 系统版本
+  string system_version = 15;
+  // 应用版本
+  string app_version= 16;
 
-  string account_id = 14;
-  string trace_id = 15;
-  string app_id = 16;
+  string account_id = 17;
+  string trace_id = 18;
+  string app_id = 19;
+
+  string id = 20;
+  string created_at = 21;
 }
 
 message CreateRequest {
-  string client_name = 1;
-  string client_type = 2;
-  string client_system = 3;
+  // 请求方式
+  basic.v1.RequestMethod method = 1;
+  // 请求路径
+  string path = 2;
+  // 原始请求内容
+  string request = 3;
+  // 原始响应内容
+  string response = 4;
+  // 耗时
+  uint64 duration = 5;
+  // 状态码
+  uint32 status = 6;
 
-  string method = 4;
-  string path = 5;
-  string request = 6;
-  string response = 7;
-  uint32 status = 8;
-  string timer = 9;
+  // 请求ip
+  string ip = 7;
+  // 请求地址
+  string address = 8;
 
-  string ip = 10;
-  string address = 11;
+  // 系统类型
+  basic.v1.SystemType system_type = 9;
+  // 客户端类型
+  basic.v1.ClientType client_type = 10;
+  // 设备形态
+  basic.v1.DeviceFormFactor device_form_factor = 11;
 
-  string account_id = 12;
-  string trace_id = 13;
-  string app_id = 14;
+  // 客户端名称
+  string client_name = 12;
+  // 客户端版本
+  string client_version = 13;
+  // 系统名称
+  string system_name = 14;
+  // 系统版本
+  string system_version = 15;
+  // 应用版本
+  string app_version= 16;
+
+  string account_id = 17;
+  string trace_id = 18;
+  string app_id = 19;
 }
 message CreateResponse {
   string message = 1;
@@ -86,22 +168,39 @@ message List {
 message FindListRequest {
   uint64 page = 1;
   uint64 page_size = 2;
+  string keyword = 3;
 
-  string method = 3;
-  uint32 status = 4;
+  string start_time = 4;
+  string end_time = 5;
 
-  string client_name = 5;
-  string client_type = 6;
-  string client_system = 7;
+  // 请求方式
+  basic.v1.RequestMethod method = 6;
+  // 系统类型
+  basic.v1.SystemType system_type = 7;
+  // 客户端类型
+  basic.v1.ClientType client_type = 8;
+  // 设备形态
+  basic.v1.DeviceFormFactor device_form_factor = 9;
 
-  string search_key = 8;
-  string start_time = 9;
-  string end_time = 10;
+  // 客户端名称
+  string client_name = 10;
+  // 客户端版本
+  string client_version = 11;
+  // 系统名称
+  string system_name = 12;
+  // 系统版本
+  string system_version = 13;
+  // 应用版本
+  string app_version = 14;
 
-  string account_id = 11;
-  string trace_id = 12;
-  string app_id = 13;
-  string id = 14;
+  // 账号id
+  string account_id = 15;
+  // 链路id
+  string trace_id = 16;
+  // 应用id
+  string app_id = 17;
+  // 日志id
+  string id = 18;
 }
 message FindListResponse {
   string message = 1;
