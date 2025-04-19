@@ -10,35 +10,6 @@ import "acme/basic/v1/client.proto";
 import "acme/basic/v1/logger.proto";
 import "acme/basic/v1/device.proto";
 
-// 定义Swagger元信息
-option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
-  info: {
-    title: "ClientLogger";
-    version: "1.0.0";
-    description: "客户端日志";
-    contact: {
-      name: "梨花炖海棠";
-      url: "https://github.com/lhdhtrc";
-      email: "lhdhtr@gmail.com";
-    };
-  };
-  security_definitions: {
-    security: {
-      key: "Authorization"
-      value: {
-        name: "Authorization"
-        in: IN_HEADER
-        type: TYPE_API_KEY
-      }
-    }
-  }
-  host: "192.168.1.100:10000";
-  base_path: "/api";
-  schemes: [HTTP];
-  consumes: "application/json";
-  produces: "application/json";
-};
-
 service ClientLoggerService {
   // 创建客户端日志
   rpc Create(CreateRequest) returns (CreateResponse) {
@@ -69,9 +40,9 @@ service ClientLoggerService {
 
 message Client {
   // 页面地址
-  string url = 1;
-  // 日志消息
-  string message = 2;
+  string path = 1;
+  // 日志内容
+  string content = 2;
   // 日志级别
   basic.v1.LoggerLevel level = 3;
 
@@ -104,9 +75,9 @@ message Client {
 
 message CreateRequest {
   // 页面地址
-  string url = 1;
-  // 日志消息
-  string message = 2;
+  string path = 1;
+  // 日志内容
+  string content = 2;
   // 日志级别
   basic.v1.LoggerLevel level = 3;
 
@@ -199,3 +170,32 @@ message DeleteByIdResponse {
   string message = 1;
   uint32 code = 2;
 }
+
+// 定义Swagger元信息
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  info: {
+    title: "ClientLogger";
+    version: "1.0.0";
+    description: "客户端日志";
+    contact: {
+      name: "梨花炖海棠";
+      url: "https://github.com/lhdhtrc";
+      email: "lhdhtr@gmail.com";
+    };
+  };
+  security_definitions: {
+    security: {
+      key: "Authorization"
+      value: {
+        name: "Authorization"
+        in: IN_HEADER
+        type: TYPE_API_KEY
+      }
+    }
+  }
+  host: "192.168.1.100:10000";
+  base_path: "/api";
+  schemes: [HTTP];
+  consumes: "application/json";
+  produces: "application/json";
+};

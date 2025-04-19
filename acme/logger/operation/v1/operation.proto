@@ -8,35 +8,6 @@ import "protoc-gen-openapiv2/options/annotations.proto";
 import "acme/basic/v1/logger.proto";
 import "acme/basic/v1/database.proto";
 
-// 定义Swagger元信息
-option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
-  info: {
-    title: "OperationLogger";
-    version: "1.0.0";
-    description: "操作日志";
-    contact: {
-      name: "梨花炖海棠";
-      url: "https://github.com/lhdhtrc";
-      email: "lhdhtr@gmail.com";
-    };
-  };
-  security_definitions: {
-    security: {
-      key: "Authorization"
-      value: {
-        name: "Authorization"
-        in: IN_HEADER
-        type: TYPE_API_KEY
-      }
-    }
-  }
-  host: "192.168.1.100:10000";
-  base_path: "/api";
-  schemes: [HTTP];
-  consumes: "application/json";
-  produces: "application/json";
-};
-
 service OperationLoggerService {
   rpc Create(CreateRequest) returns (CreateResponse) {};
   // 根据日志id查询操作日志
@@ -60,56 +31,58 @@ service OperationLoggerService {
 }
 
 message Operation {
+  // 数据库
+  string database = 1;
   // 操作语句
-  string statement = 1;
+  string statement = 2;
   // 操作结果
-  string result = 2;
-
+  string result = 3;
   // 耗时
-  uint64 duration = 3;
+  uint64 duration = 4;
 
   // 日志级别
-  basic.v1.LoggerLevel level = 4;
+  basic.v1.LoggerLevel level = 5;
   // 数据库类型
-  basic.v1.DatabaseType type = 5;
+  basic.v1.DatabaseType type = 6;
 
   // 链路id
-  string trace_id = 6;
+  string trace_id = 7;
   // 账号id
-  string account_id = 7;
+  string account_id = 8;
 
   // 目标应用id
-  string target_app_id = 8;
+  string target_app_id = 9;
   // 调用应用id
-  string invoke_app_id = 9;
+  string invoke_app_id = 10;
 
-  string id = 10;
-  string created_at = 11;
+  string id = 11;
+  string created_at = 12;
 }
 
 message CreateRequest {
+  // 数据库
+  string database = 1;
   // 操作语句
-  string statement = 1;
+  string statement = 2;
   // 操作结果
-  string result = 2;
-
+  string result = 3;
   // 耗时
-  uint64 duration = 3;
+  uint64 duration = 4;
 
   // 日志级别
-  basic.v1.LoggerLevel level = 4;
+  basic.v1.LoggerLevel level = 5;
   // 数据库类型
-  basic.v1.DatabaseType type = 5;
+  basic.v1.DatabaseType type = 6;
 
   // 链路id
-  string trace_id = 6;
+  string trace_id = 7;
   // 账号id
-  string account_id = 7;
+  string account_id = 8;
 
   // 目标应用id
-  string target_app_id = 8;
+  string target_app_id = 9;
   // 调用应用id
-  string invoke_app_id = 9;
+  string invoke_app_id = 10;
 }
 message CreateResponse {
   string message = 1;
@@ -161,3 +134,32 @@ message DeleteByIdResponse {
   string message = 1;
   uint32 code = 2;
 }
+
+// 定义Swagger元信息
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  info: {
+    title: "OperationLogger";
+    version: "1.0.0";
+    description: "操作日志";
+    contact: {
+      name: "梨花炖海棠";
+      url: "https://github.com/lhdhtrc";
+      email: "lhdhtr@gmail.com";
+    };
+  };
+  security_definitions: {
+    security: {
+      key: "Authorization"
+      value: {
+        name: "Authorization"
+        in: IN_HEADER
+        type: TYPE_API_KEY
+      }
+    }
+  }
+  host: "192.168.1.100:10000";
+  base_path: "/api";
+  schemes: [HTTP];
+  consumes: "application/json";
+  produces: "application/json";
+};
