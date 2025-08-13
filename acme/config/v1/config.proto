@@ -1,0 +1,236 @@
+syntax="proto3";
+
+package acme.config.v1;
+
+import "buf/validate/validate.proto";
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+service ConfigService {
+  // 获取配置
+  rpc Get(GetRequest) returns (GetResponse);
+  // 创建配置
+  rpc Create(CreateRequest) returns (CreateResponse) {
+    option (google.api.http) = {
+      post: "/v1/config",
+      body: "*",
+    };
+  };
+  // 根据id查询配置
+  rpc FindById(FindByIdRequest) returns (FindByIdResponse) {
+    option (google.api.http) = {
+      get: "/v1/config",
+    };
+  }
+  // 查询配置列表
+  rpc FindList(FindListRequest) returns (FindListResponse) {
+    option (google.api.http) = {
+      get: "/v1/config/list"
+    };
+  };
+  // 根据id删除配置
+  rpc DeleteById(DeleteByIdRequest) returns (DeleteByIdResponse) {
+    option (google.api.http) = {
+      delete: "/v1/config/{id}"
+    };
+  };
+
+  // 设置版本
+  rpc SetVersion(SetVersionRequest) returns (SetVersionResponse) {
+    option (google.api.http) = {
+      put: "/v1/config/version",
+      body: "*",
+    };
+  };
+  // 查询历史版本配置列表
+  rpc FindHistoryVersion(FindHistoryVersionRequest) returns (FindHistoryVersionResponse) {
+    option (google.api.http) = {
+      get: "/v1/config/history"
+    };
+  };
+}
+
+message Config {
+  // 配置组
+  string group = 1;
+  // 环境
+  string env = 2;
+  // 配置项
+  string key = 3;
+  // 配置内容
+  string content = 4;
+  // 配置版本
+  string version = 5;
+  // 是否是当前版本
+  bool is_current = 6;
+
+  // 用户id
+  string user_id = 7;
+  // 应用id
+  string app_id = 8;
+
+
+  string id = 9;
+  string created_at = 10;
+}
+
+message ConfigCenterMeta {
+  // 应用id
+  string app_id = 1 [(buf.validate.field).string.uuid = true];
+  // 配置组
+  string group = 2 [(buf.validate.field).required = true];
+  // 环境
+  string env = 3 [(buf.validate.field).required = true];
+  // 配置项
+  string key = 4 [(buf.validate.field).required = true];
+}
+
+message CreateRequest {
+  ConfigCenterMeta meta = 1 [(buf.validate.field).required = true];
+  // 配置内容
+  string content = 2 [(buf.validate.field).required = true];
+  // 配置版本
+  string version = 3 [(buf.validate.field).required = true];
+}
+message CreateResponse {
+  string message = 1;
+  uint32 code = 2;
+  // 空值无用意
+  string data = 3;
+}
+
+message GetRequest {
+  // 服务名
+  string app_id = 1 [(buf.validate.field).string.uuid = true];
+  // 配置组
+  string group = 2 [(buf.validate.field).required = true];
+  // 环境
+  string env = 3 [(buf.validate.field).required = true];
+  // 配置项
+  string key = 4 [(buf.validate.field).required = true];
+}
+message GetResponse {
+  string message = 1;
+  uint32 code = 2;
+  Config data = 3;
+}
+
+message FindByIdRequest {
+  string id = 1 [(buf.validate.field).required = true];
+}
+message FindByIdResponse {
+  string message = 1;
+  uint32 code = 2;
+  Config data = 3;
+}
+
+message List {
+  int64 total = 1;
+  repeated ListItem list = 2;
+}
+message ListItem {
+  // 应用id
+  string app_id = 1;
+  // 配置组
+  string group = 2;
+  // 环境
+  string env = 3;
+  // 配置项
+  string key = 4;
+  // 配置版本
+  string version = 5;
+  // 是否是当前版本
+  bool is_current = 6;
+
+  // 用户id
+  string user_id = 7;
+
+  string id = 8;
+  string created_at = 9;
+}
+message FindListRequest {
+  uint64 page = 1;
+  uint64 page_size = 2;
+  // 应用id
+  string app_id = 3;
+  // 配置组
+  string group = 4;
+  // 环境
+  string env = 5;
+  // 配置项
+  string key = 6;
+}
+message FindListResponse {
+  string message = 1;
+  uint32 code = 2;
+  List data = 3;
+}
+
+message DeleteByIdRequest {
+  string id = 1 [(buf.validate.field).required = true];
+}
+message DeleteByIdResponse {
+  string message = 1;
+  uint32 code = 2;
+  // 空值无用意
+  string data = 3;
+}
+
+message SetVersionRequest {
+  string id = 1 [(buf.validate.field).required = true];
+}
+message SetVersionResponse {
+  string message = 1;
+  uint32 code = 2;
+  // 空值无用意
+  string data = 3;
+}
+
+message FindHistoryVersionRequest {
+  uint64 page = 1;
+  uint64 page_size = 2;
+  // 应用id
+  string app_id = 3 [(buf.validate.field).string.uuid = true];
+  // 配置组
+  string group = 4;
+  // 环境
+  string env = 5;
+  // 配置项
+  string key = 6;
+  // 版本号
+  string version = 7;
+}
+message FindHistoryVersionResponse {
+  string message = 1;
+  uint32 code = 2;
+  List data = 3;
+}
+
+
+// 定义Swagger元信息
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  info: {
+    title: "ConfigService";
+    version: "1.0.0";
+    description: "配置服务";
+    contact: {
+      name: "梨花炖海棠";
+      url: "https://github.com/lhdhtrc";
+      email: "lhdhtr@gmail.com";
+    };
+  };
+  security_definitions: {
+    security: {
+      key: "Authorization"
+      value: {
+        name: "Authorization"
+        in: IN_HEADER
+        type: TYPE_API_KEY
+      }
+    }
+  }
+  host: "192.168.1.100:10000";
+  schemes: [HTTP];
+  consumes: "application/json";
+  produces: "application/json";
+};

@@ -18,10 +18,10 @@ service ClientLoggerService {
       body: "*",
     };
   };
-  // 根据日志id查询客户端日志
+  // 根据id查询客户端日志
   rpc FindById(FindByIdRequest) returns (FindByIdResponse) {
     option (google.api.http) = {
-      get: "/v1/logger/client/{id}"
+      get: "/v1/logger/client"
     };
   };
   // 查询客户端日志列表
@@ -30,10 +30,17 @@ service ClientLoggerService {
       get: "/v1/logger/client/list"
     };
   };
-  // 根据客户端日志id删除
+  // 根据id删除客户端日志
   rpc DeleteById(DeleteByIdRequest) returns (DeleteByIdResponse) {
     option (google.api.http) = {
       delete: "/v1/logger/client/{id}"
+    };
+  };
+  // 根据ids删除客户端日志列表
+  rpc DeleteByIds(DeleteByIdsRequest) returns (DeleteByIdsResponse) {
+    option (google.api.http) = {
+      put: "/v1/logger/client/delete",
+      body: "*",
     };
   };
 }
@@ -44,14 +51,14 @@ message Client {
   // 日志内容
   string content = 2;
   // 日志级别
-  basic.v1.LoggerLevel level = 3;
+  int32 level = 3;
 
   // 系统类型
-  basic.v1.SystemType system_type = 4;
+  int32 system_type = 4;
   // 客户端类型
-  basic.v1.ClientType client_type = 5;
+  int32 client_type = 5;
   // 设备形态
-  basic.v1.DeviceFormFactor device_form_factor = 6;
+  int32 device_form_factor = 6;
 
   // 客户端名称
   string client_name = 7;
@@ -65,7 +72,7 @@ message Client {
   string app_version= 11;
 
   // 用户id
-  string account_id = 12;
+  string user_id = 12;
   // 应用id
   string app_id = 13;
 
@@ -100,13 +107,15 @@ message CreateRequest {
   string app_version= 11;
 
   // 用户id
-  string account_id = 12;
+  string user_id = 12;
   // 应用id
   string app_id = 13;
 }
 message CreateResponse {
   string message = 1;
   uint32 code = 2;
+  // 空值无用意
+  string data = 3;
 }
 
 message FindByIdRequest {
@@ -150,8 +159,8 @@ message FindListRequest {
   // 应用版本
   string app_version = 14;
 
-  // 账号id
-  string account_id = 15;
+  // 用户id
+  string user_id = 15;
   // 应用id
   string app_id = 16;
   // 日志id
@@ -169,6 +178,18 @@ message DeleteByIdRequest {
 message DeleteByIdResponse {
   string message = 1;
   uint32 code = 2;
+  // 空值无用意
+  string data = 3;
+}
+
+message DeleteByIdsRequest {
+  repeated string ids = 1;
+}
+message DeleteByIdsResponse {
+  string message = 1;
+  uint32 code = 2;
+  // 空值无用意
+  string data = 3;
 }
 
 // 定义Swagger元信息
@@ -194,7 +215,6 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
     }
   }
   host: "192.168.1.100:10000";
-  base_path: "/api";
   schemes: [HTTP];
   consumes: "application/json";
   produces: "application/json";

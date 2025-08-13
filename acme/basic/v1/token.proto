@@ -1,0 +1,16 @@
+syntax="proto3";
+
+package acme.basic.v1;
+
+message Token {
+  string access_token = 1;
+  string refresh_token = 2;
+}
+
+enum TokenType {
+  TOKEN_TYPE_UNSPECIFIED = 0;
+  // 访问令牌
+  TOKEN_TYPE_ACCESS = 1;
+  // 刷新令牌
+  TOKEN_TYPE_REFRESH = 2;
+}

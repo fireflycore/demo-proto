@@ -1,0 +1,26 @@
+syntax="proto3";
+
+package acme.basic.v1;
+
+// 存储类型
+enum StorageType {
+  STORAGE_TYPE_UNSPECIFIED = 0;
+  // 自建Minio
+  STORAGE_TYPE_MINIO = 1;
+  // 腾讯云COS
+  STORAGE_TYPE_COS = 2;
+  // 阿里云OSS
+  STORAGE_TYPE_OSS = 3;
+  // 百度云BOS
+  STORAGE_TYPE_BOS = 4;
+  // 七牛云KODO
+  STORAGE_TYPE_KODO = 5;
+}
+
+// 文件信息
+message File {
+  string id = 1;
+  string url = 2;
+  string name = 3;
+  string type = 4;
+}

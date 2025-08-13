@@ -1,0 +1,43 @@
+syntax="proto3";
+
+package acme.config.v1;
+
+import "acme/basic/v1/tls.proto";
+
+enum GormType {
+  GORM_TYPE_UNSPECIFIED = 0;
+  GORM_TYPE_POSTGRES = 1;
+  GORM_TYPE_ORACLE = 2;
+  GORM_TYPE_SQLITE = 3;
+  GORM_TYPE_MYSQL = 4;
+  GORM_TYPE_MSSQL = 5;
+}
+
+message GORM {
+  GormType type = 1;
+  string address = 2;
+  string database = 3;
+  string username = 4;
+  string password = 5;
+
+  // TLS加密配置（生产环境建议启用），如果不为null则启用tls加密
+  basic.v1.TLS tls = 6;
+
+  // 连接池配置（性能调优关键参数）
+
+  // 最大打开连接数（建议：根据负载设置，默认100），0表示无限制（不推荐生产环境使用）
+  uint32 max_open_connects = 7;
+  // 最大空闲连接数（建议：保持适当空闲连接减少握手开销），0表示无限制（需配合max_open_connects使用）
+  uint32 max_idle_connects = 8;
+  // 连接最大生命周期（单位：秒，建议：300-600秒），超时后连接会被强制回收重建
+  uint32 conn_max_life_time = 9;
+
+  // 高级配置选项
+
+  // 是否启用SQL日志（调试建议开启，生产环境建议关闭）
+  bool logger = 10;
+  // 是否启用预处理语句（安全建议：始终开启防止SQL注入）
+  bool prepare_stmt = 11;
+  // 是否跳过默认事务（特殊场景使用，如批量导入）
+  bool skip_default_transaction = 12;
+}

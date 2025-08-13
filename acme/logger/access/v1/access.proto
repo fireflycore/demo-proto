@@ -11,11 +11,12 @@ import "acme/basic/v1/client.proto";
 import "acme/basic/v1/device.proto";
 
 service AccessLoggerService {
+  // 创建访问日志
   rpc Create(CreateRequest) returns (CreateResponse) {};
-  // 根据日志id查询访问日志详情
+  // 根据id查询访问日志详情
   rpc FindById(FindByIdRequest) returns (FindByIdResponse) {
     option (google.api.http) = {
-      get: "/v1/logger/access/{id}"
+      get: "/v1/logger/access"
     };
   };
   // 查询访问日志列表
@@ -30,11 +31,18 @@ service AccessLoggerService {
       delete: "/v1/logger/access/{id}"
     };
   };
+  // 根据ids删除访问日志列表
+  rpc DeleteByIds(DeleteByIdsRequest) returns (DeleteByIdsResponse) {
+    option (google.api.http) = {
+      put: "/v1/logger/access/delete",
+      body: "*",
+    };
+  };
 }
 
 message Access {
   // 请求方式
-  basic.v1.RequestMethod method = 1;
+  int32 method = 1;
   // 请求路径
   string path = 2;
   // 原始请求内容
@@ -52,11 +60,11 @@ message Access {
   string address = 8;
 
   // 系统类型
-  basic.v1.SystemType system_type = 9;
+  int32 system_type = 9;
   // 客户端类型
-  basic.v1.ClientType client_type = 10;
+  int32 client_type = 10;
   // 设备形态
-  basic.v1.DeviceFormFactor device_form_factor = 11;
+  int32 device_form_factor = 11;
 
   // 客户端名称
   string client_name = 12;
@@ -69,12 +77,53 @@ message Access {
   // 应用版本
   string app_version = 16;
 
-  string account_id = 17;
+  string user_id = 17;
   string trace_id = 18;
   string app_id = 19;
 
   string id = 20;
   string created_at = 21;
+}
+
+message Row {
+  // 请求方式
+  int32 method = 1;
+  // 请求路径
+  string path = 2;
+  // 耗时
+  uint64 duration = 3;
+  // 状态码
+  uint32 status = 4;
+
+  // 请求ip
+  string ip = 5;
+  // 请求地址
+  string address = 6;
+
+  // 系统类型
+  int32 system_type = 7;
+  // 客户端类型
+  int32 client_type = 8;
+  // 设备形态
+  int32 device_form_factor = 9;
+
+  // 客户端名称
+  string client_name = 10;
+  // 客户端版本
+  string client_version = 11;
+  // 系统名称
+  string system_name = 12;
+  // 系统版本
+  string system_version = 13;
+  // 应用版本
+  string app_version = 14;
+
+  string user_id = 15;
+  string trace_id = 16;
+  string app_id = 17;
+
+  string id = 18;
+  string created_at = 19;
 }
 
 message CreateRequest {
@@ -114,13 +163,15 @@ message CreateRequest {
   // 应用版本
   string app_version = 16;
 
-  string account_id = 17;
-  string trace_id = 18;
+  string trace_id = 17;
+  string user_id = 18;
   string app_id = 19;
 }
 message CreateResponse {
   string message = 1;
   uint32 code = 2;
+  // 空值无用意
+  string data = 3;
 }
 
 message FindByIdRequest {
@@ -134,7 +185,7 @@ message FindByIdResponse {
 
 message List {
   int64 total = 1;
-  repeated Access list = 2;
+  repeated Row list = 2;
 }
 message FindListRequest {
   uint64 page = 1;
@@ -164,10 +215,10 @@ message FindListRequest {
   // 应用版本
   string app_version = 14;
 
-  // 账号id
-  string account_id = 15;
   // 链路id
-  string trace_id = 16;
+  string trace_id = 15;
+  // 用户id
+  string user_id = 16;
   // 应用id
   string app_id = 17;
   // 日志id
@@ -185,6 +236,18 @@ message DeleteByIdRequest {
 message DeleteByIdResponse {
   string message = 1;
   uint32 code = 2;
+  // 空值无用意
+  string data = 3;
+}
+
+message DeleteByIdsRequest {
+  repeated string ids = 1;
+}
+message DeleteByIdsResponse {
+  string message = 1;
+  uint32 code = 2;
+  // 空值无用意
+  string data = 3;
 }
 
 // 定义Swagger元信息
@@ -210,7 +273,6 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
     }
   }
   host: "192.168.1.100:10000";
-  base_path: "/api";
   schemes: [HTTP];
   consumes: "application/json";
   produces: "application/json";

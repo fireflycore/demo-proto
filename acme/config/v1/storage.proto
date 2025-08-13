@@ -1,0 +1,19 @@
+syntax="proto3";
+
+package acme.config.v1;
+
+import "acme/basic/v1/storage.proto";
+
+message Storage {
+  // 存储类型
+  basic.v1.StorageType type = 1;
+  // 存储桶
+  string bucket = 2;
+  // 地区
+  string region = 3;
+  // 前缀
+  string prefix = 4;
+  string access_key = 5;
+  string secret_key = 6;
+  string endpoint = 7;
+}

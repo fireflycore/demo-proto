@@ -1,0 +1,24 @@
+syntax="proto3";
+
+package acme.config.v1;
+
+import "acme/basic/v1/tls.proto";
+
+message Redis {
+  string address = 1;
+  string database = 2;
+  string username = 3;
+  string password = 4;
+
+  // TLS加密配置（生产环境建议启用），如果不为null则启用tls加密
+  basic.v1.TLS tls = 5;
+
+  // 连接池配置
+
+  // 最大打开连接数（建议：根据负载设置，默认100），0表示无限制（不推荐生产环境使用）
+  uint32 max_open_connects = 6;
+  // 最大空闲连接数（建议：保持适当空闲连接减少握手开销），0表示无限制（需配合max_open_connects使用）
+  uint32 max_idle_connects = 7;
+  // 连接最大生命周期（单位：秒，建议：300-600秒），超时后连接会被强制回收重建
+  uint32 conn_max_life_time = 8;
+}
