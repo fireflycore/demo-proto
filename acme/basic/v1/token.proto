@@ -7,10 +7,33 @@ message Token {
   string refresh_token = 2;
 }
 
+message SessionToken {
+  string token = 1;
+  string expired = 2;
+}
+
 enum TokenType {
   TOKEN_TYPE_UNSPECIFIED = 0;
   // 访问令牌
   TOKEN_TYPE_ACCESS = 1;
   // 刷新令牌
   TOKEN_TYPE_REFRESH = 2;
+  // session
+  TOKEN_TYPE_SESSION = 3;
+}
+
+enum TokenMode {
+  TOKEN_MODE_UNSPECIFIED = 0;
+  // jwt
+  TOKEN_MODE_JWT = 1;
+  // session
+  TOKEN_MODE_SESSION = 2;
+}
+
+enum TokenPurpose {
+  TOKEN_PURPOSE_UNSPECIFIED = 0;
+  // 用户访问
+  TOKEN_PURPOSE_USER = 1;
+  // 服务访问
+  TOKEN_PURPOSE_SERVICE = 2;
 }
