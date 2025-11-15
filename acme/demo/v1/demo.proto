@@ -7,44 +7,31 @@ import "google/api/annotations.proto";
 import "protoc-gen-openapiv2/options/annotations.proto";
 
 service DemoService {
-  rpc Create(CreateRequest) returns (CreateResponse) {
+  rpc CreateDemo(CreateDemoRequest) returns (CreateDemoResponse) {
     option (google.api.http) = {
       post: "/v1/demo",
       body: "*",
     };
-    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-      tags: ["demo"];
-      operation_id: "create_demo";
-      summary: "创建示例";
-      description: "创建示例详细描述";
-      deprecated: true; // 废弃
-      responses: {
-        key: "200";
-        value: {
-          description: "创建成功";
-        };
-      }
-    };
   };
-  rpc FindById(FindByIdRequest) returns (FindByIdResponse) {
-    option (google.api.http) = {
-      get: "/v1/demo/{id}",
-    };
-  };
-  rpc FindList(FindListRequest) returns (FindListResponse) {
+  rpc GetDemoList(GetDemoListRequest) returns (GetDemoListResponse) {
     option (google.api.http) = {
       get: "/v1/demo/list",
     };
   };
-  rpc Update(UpdateRequest) returns (UpdateResponse) {
+  rpc GetDemoInfo(GetDemoInfoRequest) returns (GetDemoInfoResponse) {
+    option (google.api.http) = {
+      get: "/v1/demo",
+    };
+  };
+  rpc UpdateDemo(UpdateDemoRequest) returns (UpdateDemoResponse) {
     option (google.api.http) = {
       put: "/v1/demo",
       body: "*",
     };
   };
-  rpc DeleteById(DeleteByIdRequest) returns (DeleteByIdResponse) {
+  rpc DeleteDemo(DeleteDemoRequest) returns (DeleteDemoResponse) {
     option (google.api.http) = {
-      delete: "/v1/demo/{id}",
+      delete: "/v1/demo",
     };
   };
 }
@@ -68,64 +55,48 @@ message Demo {
   Author author = 9;
 }
 
-message CreateRequest {
-  string title = 1 [
-    (buf.validate.field).required = true,
-    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
-      description: "标题"
-    }
-  ];
-  string description = 2 [
-    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
-      description: "描述"
-    }
-  ];
-  string content = 3 [
-    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
-      description: "内容"
-    }
-  ];
-  uint32 status = 4 [
-    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
-      description: "状态"
-    }
-  ];
-  uint32 sort = 5 [
-    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
-      description: "排序"
-    }
-  ];
+message CreateDemoRequest {
+  // 标题
+  string title = 1 [(buf.validate.field).required = true];
+  // 描述
+  string description = 2;
+  // 内容
+  string content = 3;
+  // 状态
+  uint32 status = 4 [(buf.validate.field).uint32 = { in: [0, 1, 2] }];
+  // 排序
+  uint32 sort = 5;
 }
-message CreateResponse {
+message CreateDemoResponse {
   uint32 code = 1;
   string message = 2;
 }
 
-message FindByIdRequest {
+message DemoList {
+  int64 total = 1;
+  repeated Demo list = 2;
+}
+message GetDemoListRequest {
+  uint64 page = 1;
+  uint64 page_size = 2;
+  string search_key = 3;
+}
+message GetDemoListResponse {
+  string message = 1;
+  uint32 code = 2;
+  DemoList data = 3;
+}
+
+message GetDemoInfoRequest {
   string id = 1 [(buf.validate.field).string.uuid = true];
 }
-message FindByIdResponse {
+message GetDemoInfoResponse {
   uint32 code = 1;
   string message = 2;
   Demo data = 3;
 }
 
-message List {
-  int64 total = 1;
-  repeated Demo list = 2;
-}
-message FindListRequest {
-  uint64 page = 1;
-  uint64 page_size = 2;
-  string search_key = 3;
-}
-message FindListResponse {
-  string message = 1;
-  uint32 code = 2;
-  List data = 3;
-}
-
-message UpdateRequest {
+message UpdateDemoRequest {
   string id = 1 [(buf.validate.field).string.uuid = true];
   string title = 2 [(buf.validate.field).required = true];
   string description = 3;
@@ -133,15 +104,15 @@ message UpdateRequest {
   uint32 status = 5;
   uint32 sort = 6;
 }
-message UpdateResponse {
+message UpdateDemoResponse {
   string message = 1;
   uint32 code = 2;
 }
 
-message DeleteByIdRequest {
+message DeleteDemoRequest {
   string id = 1 [(buf.validate.field).string.uuid = true];
 }
-message DeleteByIdResponse {
+message DeleteDemoResponse {
   string message = 1;
   uint32 code = 2;
 }
@@ -151,7 +122,7 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
   info: {
     title: "DemoService";
     version: "1.0.0";
-    description: "示例服务";
+    description: "例子服务";
     contact: {
       name: "梨花炖海棠";
       url: "https://github.com/lhdhtrc";
