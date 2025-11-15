@@ -1,0 +1,26 @@
+syntax="proto3";
+
+package acme.basic.v1;
+
+enum AuthStatus {
+  // 未授权 - 初始状态
+  AUTH_STATUS_UNSPECIFIED = 0;
+
+  // 已授权 - 正常使用状态
+  AUTH_STATUS_GRANTED = 1;
+
+  // 授权申请中 - 用户已提交授权申请，等待审核
+  AUTH_STATUS_PENDING = 2;
+
+  // 已驳回 - 管理员驳回授权申请
+  AUTH_STATUS_REJECTED = 3;
+
+  // 已解除授权 - 用户主动取消授权
+  AUTH_STATUS_REVOKED = 4;
+
+  // 已暂停 - 授权被临时暂停（如用户投诉、风险检测等）
+  AUTH_STATUS_SUSPENDED = 5;
+
+  // 授权被封禁 - 因违反应用规则或平台政策被永久禁止
+  AUTH_STATUS_BANNED = 6;
+}

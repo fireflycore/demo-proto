@@ -1,0 +1,33 @@
+syntax="proto3";
+
+package acme.basic.v1;
+
+message User {
+  string id = 1;
+  string avatar = 2;
+  string nickname = 3;
+}
+
+enum UserStatus {
+  // 未设置/未激活
+  USER_STATUS_UNSPECIFIED = 0;
+  // 启用
+  USER_STATUS_ENABLED = 1;
+  // 停用
+  USER_STATUS_DISABLED = 2;
+  // 永久封禁
+  USER_STATUS_BANNED = 3;
+}
+
+enum UserRealStatus {
+  // 未实名
+  USER_REAL_STATUS_UNSPECIFIED = 0;
+  // 已实名
+  USER_REAL_STATUS_VERIFIED = 1;
+  // 审核中 - 用户已提交实名申请，等待审核
+  USER_REAL_STATUS_PENDING = 2;
+  // 已驳回 - 管理员驳回实名申请
+  USER_REAL_STATUS_REJECTED = 3;
+  // 已过期 - 用户实名信息过期，需要上传新的证件信息
+  USER_REAL_STATUS_EXPIRE = 4;
+}
