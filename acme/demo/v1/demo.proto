@@ -34,6 +34,11 @@ service DemoService {
       delete: "/v1/demo",
     };
   };
+  rpc GetDemoCount(GetDemoCountRequest) returns (GetDemoCountResponse) {
+    option (google.api.http) = {
+      get: "/v1/demo/count",
+    };
+  };
 }
 
 message Author {
@@ -70,6 +75,8 @@ message CreateDemoRequest {
 message CreateDemoResponse {
   uint32 code = 1;
   string message = 2;
+  // 空值无用意
+  optional string data = 3;
 }
 
 message DemoList {
@@ -82,8 +89,8 @@ message GetDemoListRequest {
   string search_key = 3;
 }
 message GetDemoListResponse {
-  string message = 1;
-  uint32 code = 2;
+  uint32 code = 1;
+  string message = 2;
   DemoList data = 3;
 }
 
@@ -105,16 +112,30 @@ message UpdateDemoRequest {
   uint32 sort = 6;
 }
 message UpdateDemoResponse {
-  string message = 1;
-  uint32 code = 2;
+  uint32 code = 1;
+  string message = 2;
+  // 空值无用意
+  optional string data = 3;
 }
 
 message DeleteDemoRequest {
   string id = 1 [(buf.validate.field).string.uuid = true];
 }
 message DeleteDemoResponse {
-  string message = 1;
-  uint32 code = 2;
+  uint32 code = 1;
+  string message = 2;
+  // 空值无用意
+  optional string data = 3;
+}
+
+message GetDemoCountRequest {
+  // 可选过滤条件
+  optional uint32 status = 1 [(buf.validate.field).uint32 = { in: [0, 1, 2] }];
+}
+message GetDemoCountResponse {
+  uint32 code = 1;
+  string message = 2;
+  int64 data = 3;
 }
 
 // 定义Swagger元信息
