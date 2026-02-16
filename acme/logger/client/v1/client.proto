@@ -8,39 +8,31 @@ import "protoc-gen-openapiv2/options/annotations.proto";
 import "acme/basic/v1/system.proto";
 import "acme/basic/v1/client.proto";
 import "acme/basic/v1/logger.proto";
-import "acme/basic/v1/device.proto";
 
 service ClientLoggerService {
   // 创建客户端日志
-  rpc Create(CreateRequest) returns (CreateResponse) {
+  rpc CreateLog(CreateLogRequest) returns (CreateLogResponse) {
     option (google.api.http) = {
       post: "/v1/logger/client",
       body: "*",
     };
   };
-  // 根据id查询客户端日志
-  rpc FindById(FindByIdRequest) returns (FindByIdResponse) {
-    option (google.api.http) = {
-      get: "/v1/logger/client"
-    };
-  };
   // 查询客户端日志列表
-  rpc FindList(FindListRequest) returns (FindListResponse) {
+  rpc GetLogList(GetLogListRequest) returns (GetLogListResponse) {
     option (google.api.http) = {
       get: "/v1/logger/client/list"
     };
   };
-  // 根据id删除客户端日志
-  rpc DeleteById(DeleteByIdRequest) returns (DeleteByIdResponse) {
+  // 获取客户端日志信息
+  rpc GetLogInfo(GetLogInfoRequest) returns (GetLogInfoResponse) {
     option (google.api.http) = {
-      delete: "/v1/logger/client/{id}"
+      get: "/v1/logger/client"
     };
   };
-  // 根据ids删除客户端日志列表
-  rpc DeleteByIds(DeleteByIdsRequest) returns (DeleteByIdsResponse) {
+  // 删除客户端日志
+  rpc DeleteLog(DeleteLogRequest) returns (DeleteLogResponse) {
     option (google.api.http) = {
-      put: "/v1/logger/client/delete",
-      body: "*",
+      delete: "/v1/logger/client"
     };
   };
 }
@@ -57,30 +49,29 @@ message Client {
   int32 system_type = 4;
   // 客户端类型
   int32 client_type = 5;
-  // 设备形态
-  int32 device_form_factor = 6;
 
   // 客户端名称
-  string client_name = 7;
+  string client_name = 6;
   // 客户端版本
-  string client_version = 8;
+  string client_version = 7;
   // 系统名称
-  string system_name = 9;
+  string system_name = 8;
   // 系统版本
-  string system_version = 10;
+  string system_version = 9;
   // 应用版本
-  string app_version= 11;
+  string app_version= 10;
 
   // 用户id
-  string user_id = 12;
+  string user_id = 11;
   // 应用id
-  string app_id = 13;
+  string app_id = 12;
 
-  string id = 14;
-  string created_at = 15;
+  string id = 13;
+  string created_at = 14;
+  string updated_at = 15;
 }
 
-message CreateRequest {
+message CreateLogRequest {
   // 页面地址
   string path = 1;
   // 日志内容
@@ -92,8 +83,6 @@ message CreateRequest {
   basic.v1.SystemType system_type = 4;
   // 客户端类型
   basic.v1.ClientType client_type = 5;
-  // 设备形态
-  basic.v1.DeviceFormFactor device_form_factor = 6;
 
   // 客户端名称
   string client_name = 7;
@@ -111,30 +100,21 @@ message CreateRequest {
   // 应用id
   string app_id = 13;
 }
-message CreateResponse {
-  string message = 1;
-  uint32 code = 2;
+message CreateLogResponse {
+ uint32 code = 1;
+  string message = 2;
   // 空值无用意
   string data = 3;
 }
 
-message FindByIdRequest {
-  string id = 1;
-}
-message FindByIdResponse {
-  string message = 1;
-  uint32 code = 2;
-  Client data = 3;
-}
-
-message List {
+message LogList {
   int64 total = 1;
   repeated Client list = 2;
 }
-message FindListRequest {
+message GetLogListRequest {
   uint64 page = 1;
   uint64 page_size = 2;
-  string keyword = 3;
+  string search_key = 3;
 
   string start_time = 4;
   string end_time = 5;
@@ -145,8 +125,6 @@ message FindListRequest {
   basic.v1.SystemType system_type = 7;
   // 客户端类型
   basic.v1.ClientType client_type = 8;
-  // 设备形态
-  basic.v1.DeviceFormFactor device_form_factor = 9;
 
   // 客户端名称
   string client_name = 10;
@@ -159,35 +137,35 @@ message FindListRequest {
   // 应用版本
   string app_version = 14;
 
+  string trace_id = 15;
   // 用户id
-  string user_id = 15;
+  string user_id = 16;
   // 应用id
-  string app_id = 16;
+  string app_id = 17;
   // 日志id
-  string id = 17;
+  string id = 18;
 }
-message FindListResponse {
-  string message = 1;
-  uint32 code = 2;
-  List data = 3;
+message GetLogListResponse {
+  uint32 code = 1;
+  string message = 2;
+  LogList data = 3;
 }
 
-message DeleteByIdRequest {
+message GetLogInfoRequest {
   string id = 1;
 }
-message DeleteByIdResponse {
-  string message = 1;
-  uint32 code = 2;
-  // 空值无用意
-  string data = 3;
+message GetLogInfoResponse {
+  uint32 code = 1;
+  string message = 2;
+  Client data = 3;
 }
 
-message DeleteByIdsRequest {
-  repeated string ids = 1;
+message DeleteLogRequest {
+  string id = 1;
 }
-message DeleteByIdsResponse {
-  string message = 1;
-  uint32 code = 2;
+message DeleteLogResponse {
+  uint32 code = 1;
+  string message = 2;
   // 空值无用意
   string data = 3;
 }

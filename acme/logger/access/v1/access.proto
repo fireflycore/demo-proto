@@ -8,34 +8,26 @@ import "protoc-gen-openapiv2/options/annotations.proto";
 import "acme/basic/v1/request.proto";
 import "acme/basic/v1/system.proto";
 import "acme/basic/v1/client.proto";
-import "acme/basic/v1/device.proto";
 
 service AccessLoggerService {
   // 创建访问日志
-  rpc Create(CreateRequest) returns (CreateResponse) {};
-  // 根据id查询访问日志详情
-  rpc FindById(FindByIdRequest) returns (FindByIdResponse) {
-    option (google.api.http) = {
-      get: "/v1/logger/access"
-    };
-  };
-  // 查询访问日志列表
-  rpc FindList(FindListRequest) returns (FindListResponse) {
+  rpc CreateLog(CreateLogRequest) returns (CreateLogResponse) {};
+  // 获取访问日志列表
+  rpc GetLogList(GetLogListRequest) returns (GetLogListResponse) {
     option (google.api.http) = {
       get: "/v1/logger/access/list"
     };
   };
-  // 根据id删除访问日志
-  rpc DeleteById(DeleteByIdRequest) returns (DeleteByIdResponse) {
+  // 获取访问日志信息
+  rpc GetLogInfo(GetLogInfoRequest) returns (GetLogInfoResponse) {
     option (google.api.http) = {
-      delete: "/v1/logger/access/{id}"
+      get: "/v1/logger/access"
     };
   };
-  // 根据ids删除访问日志列表
-  rpc DeleteByIds(DeleteByIdsRequest) returns (DeleteByIdsResponse) {
+  // 删除访问日志
+  rpc DeleteLog(DeleteLogRequest) returns (DeleteLogResponse) {
     option (google.api.http) = {
-      put: "/v1/logger/access/delete",
-      body: "*",
+      delete: "/v1/logger/access"
     };
   };
 }
@@ -54,79 +46,50 @@ message Access {
   // 状态码
   uint32 status = 6;
 
-  // 请求ip
-  string ip = 7;
-  // 请求地址
-  string address = 8;
+  // 客户端ip，一般是调用方的x-real-ip/invoke-service-endpoint
+  string client_ip = 7;
+  // 来源ip，一般是nginx添加的x-real-ip
+  string source_ip = 8;
+  // 来源地址，一般是nginx解析出来的来源地址
+  string source_address = 9;
 
   // 系统类型
-  int32 system_type = 9;
+  int32 system_type = 10;
   // 客户端类型
-  int32 client_type = 10;
+  int32 client_type = 11;
   // 设备形态
-  int32 device_form_factor = 11;
+  int32 device_form_factor = 12;
 
   // 客户端名称
-  string client_name = 12;
+  string client_name = 13;
   // 客户端版本
-  string client_version = 13;
+  string client_version = 14;
   // 系统名称
-  string system_name = 14;
+  string system_name = 15;
   // 系统版本
-  string system_version = 15;
+  string system_version = 16;
   // 应用版本
-  string app_version = 16;
+  string app_version = 17;
 
-  string user_id = 17;
-  string trace_id = 18;
-  string app_id = 19;
+  // 发起调用服务的应用ID
+  string invoke_service_app_id = 18;
+  // 发起调用服务的地址
+  string invoke_service_endpoint = 19;
+  // 目标服务的应用ID
+  string target_service_app_id = 20;
+  // 目标服务的地址
+  string target_service_endpoint = 21;
 
-  string id = 20;
-  string created_at = 21;
+  string trace_id = 22;
+  string user_id = 23;
+  string app_id = 24;
+
+  string id = 25;
+  string created_at = 26;
+  string updated_at = 27;
 }
 
-message Row {
-  // 请求方式
-  int32 method = 1;
-  // 请求路径
-  string path = 2;
-  // 耗时
-  uint64 duration = 3;
-  // 状态码
-  uint32 status = 4;
-
-  // 请求ip
-  string ip = 5;
-  // 请求地址
-  string address = 6;
-
-  // 系统类型
-  int32 system_type = 7;
-  // 客户端类型
-  int32 client_type = 8;
-  // 设备形态
-  int32 device_form_factor = 9;
-
-  // 客户端名称
-  string client_name = 10;
-  // 客户端版本
-  string client_version = 11;
-  // 系统名称
-  string system_name = 12;
-  // 系统版本
-  string system_version = 13;
-  // 应用版本
-  string app_version = 14;
-
-  string user_id = 15;
-  string trace_id = 16;
-  string app_id = 17;
-
-  string id = 18;
-  string created_at = 19;
-}
-
-message CreateRequest {
+message CreateLogRequest {
   // 请求方式
   basic.v1.RequestMethod method = 1;
   // 请求路径
@@ -140,17 +103,17 @@ message CreateRequest {
   // 状态码
   uint32 status = 6;
 
-  // 请求ip
-  string ip = 7;
-  // 请求地址
-  string address = 8;
+  // 客户端ip，一般是调用方的x-real-ip/invoke-service-endpoint
+  string client_ip = 7;
+  // 来源ip，一般是nginx添加的x-real-ip
+  string source_ip = 8;
+  // 来源地址，一般是nginx解析出来的来源地址
+  string source_address = 9;
 
   // 系统类型
-  basic.v1.SystemType system_type = 9;
+  basic.v1.SystemType system_type = 10;
   // 客户端类型
-  basic.v1.ClientType client_type = 10;
-  // 设备形态
-  basic.v1.DeviceFormFactor device_form_factor = 11;
+  basic.v1.ClientType client_type = 11;
 
   // 客户端名称
   string client_name = 12;
@@ -163,46 +126,47 @@ message CreateRequest {
   // 应用版本
   string app_version = 16;
 
-  string trace_id = 17;
-  string user_id = 18;
-  string app_id = 19;
+  // 发起调用服务的应用ID
+  string invoke_service_app_id = 17;
+  // 发起调用服务的地址
+  string invoke_service_endpoint = 18;
+  // 目标服务的应用ID
+  string target_service_app_id = 19;
+  // 目标服务的地址
+  string target_service_endpoint = 20;
+
+  string trace_id = 21;
+  string user_id = 22;
+  string app_id = 23;
 }
-message CreateResponse {
-  string message = 1;
-  uint32 code = 2;
+message CreateLogResponse {
+  uint32 code = 1;
+  string message = 2;
   // 空值无用意
   string data = 3;
 }
 
-message FindByIdRequest {
-  string id = 1;
-}
-message FindByIdResponse {
-  string message = 1;
-  uint32 code = 2;
-  Access data = 3;
-}
-
-message List {
-  int64 total = 1;
-  repeated Row list = 2;
-}
-message FindListRequest {
-  uint64 page = 1;
-  uint64 page_size = 2;
-  string keyword = 3;
-
-  string start_time = 4;
-  string end_time = 5;
-
+message LogItem {
   // 请求方式
-  basic.v1.RequestMethod method = 6;
+  int32 method = 1;
+  // 请求路径
+  string path = 2;
+  // 耗时
+  uint64 duration = 3;
+  // 状态码
+  uint32 status = 4;
+
+  // 客户端ip，一般是调用方的x-real-ip/invoke-service-endpoint
+  string client_ip = 5;
+  // 来源ip，一般是nginx添加的x-real-ip
+  string source_ip = 6;
+  // 来源地址，一般是nginx解析出来的来源地址
+  string source_address = 7;
+
   // 系统类型
-  basic.v1.SystemType system_type = 7;
+  int32 system_type = 8;
   // 客户端类型
-  basic.v1.ClientType client_type = 8;
-  // 设备形态
-  basic.v1.DeviceFormFactor device_form_factor = 9;
+  int32 client_type = 9;
 
   // 客户端名称
   string client_name = 10;
@@ -215,37 +179,83 @@ message FindListRequest {
   // 应用版本
   string app_version = 14;
 
-  // 链路id
-  string trace_id = 15;
-  // 用户id
-  string user_id = 16;
-  // 应用id
-  string app_id = 17;
-  // 日志id
-  string id = 18;
+  // 发起调用服务的应用ID
+  string invoke_service_app_id = 15;
+  // 发起调用服务的地址
+  string invoke_service_endpoint = 16;
+  // 目标服务的应用ID
+  string target_service_app_id = 17;
+  // 目标服务的地址
+  string target_service_endpoint = 18;
+
+  string trace_id = 19;
+  string user_id = 20;
+  string app_id = 21;
+
+  string id = 22;
+  string created_at = 23;
+  string updated_at = 24;
 }
-message FindListResponse {
-  string message = 1;
-  uint32 code = 2;
-  List data = 3;
+message LogList {
+  int64 total = 1;
+  repeated LogItem list = 2;
+}
+message GetLogListRequest {
+  uint64 page = 1;
+  uint64 page_size = 2;
+  string search_key = 3;
+
+  string start_time = 4;
+  string end_time = 5;
+
+  // 请求方式
+  basic.v1.RequestMethod method = 6;
+  // 系统类型
+  basic.v1.SystemType system_type = 7;
+  // 客户端类型
+  basic.v1.ClientType client_type = 8;
+
+  // 客户端名称
+  string client_name = 9;
+  // 客户端版本
+  string client_version = 10;
+  // 系统名称
+  string system_name = 11;
+  // 系统版本
+  string system_version = 12;
+  // 应用版本
+  string app_version = 13;
+
+  // 链路id
+  string trace_id = 14;
+  // 用户id
+  string user_id = 15;
+  // 应用id
+  string app_id = 16;
+  // 日志id
+  string id = 17;
+}
+message GetLogListResponse {
+  uint32 code = 1;
+  string message = 2;
+  LogList data = 3;
 }
 
-message DeleteByIdRequest {
+message GetLogInfoRequest {
   string id = 1;
 }
-message DeleteByIdResponse {
-  string message = 1;
-  uint32 code = 2;
-  // 空值无用意
-  string data = 3;
+message GetLogInfoResponse {
+  uint32 code = 1;
+  string message = 2;
+  Access data = 3;
 }
 
-message DeleteByIdsRequest {
-  repeated string ids = 1;
+message DeleteLogRequest {
+  string id = 1;
 }
-message DeleteByIdsResponse {
-  string message = 1;
-  uint32 code = 2;
+message DeleteLogResponse {
+  uint32 code = 1;
+  string message = 2;
   // 空值无用意
   string data = 3;
 }

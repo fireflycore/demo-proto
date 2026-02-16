@@ -9,30 +9,23 @@ import "acme/basic/v1/logger.proto";
 
 service ServerLoggerService {
   // 创建服务端日志
-  rpc Create(CreateRequest) returns (CreateResponse) {};
-  // 根据id获取服务端日志
-  rpc FindById(FindByIdRequest) returns (FindByIdResponse) {
-    option (google.api.http) = {
-      get: "/v1/logger/server"
-    };
-  };
+  rpc CreateLog(CreateLogRequest) returns (CreateLogResponse) {};
   // 获取服务端日志列表
-  rpc FindList(FindListRequest) returns (FindListResponse) {
+  rpc GetLogList(GetLogListRequest) returns (GetLogListResponse) {
     option (google.api.http) = {
       get: "/v1/logger/server/list"
     };
   };
-  // 根据id删除服务端日志
-  rpc DeleteById(DeleteByIdRequest) returns (DeleteByIdResponse) {
+  // 获取服务端日志信息
+  rpc GetLogInfo(GetLogInfoRequest) returns (GetLogInfoResponse) {
     option (google.api.http) = {
-      delete: "/v1/logger/server/{id}"
+      get: "/v1/logger/server"
     };
   };
-  // 根据ids删除服务端日志列表
-  rpc DeleteByIds(DeleteByIdsRequest) returns (DeleteByIdsResponse) {
+  // 删除服务端日志
+  rpc DeleteLog(DeleteLogRequest) returns (DeleteLogResponse) {
     option (google.api.http) = {
-      put: "/v1/logger/server/delete",
-      body: "*",
+      delete: "/v1/logger/server"
     };
   };
 }
@@ -52,9 +45,10 @@ message Server {
 
   string id = 6;
   string created_at = 7;
+  string updated_at = 8;
 }
 
-message CreateRequest {
+message CreateLogRequest {
   // 日志级别
   basic.v1.LoggerLevel level = 1;
   // 日志内容
@@ -67,30 +61,21 @@ message CreateRequest {
   // 应用id
   string app_id = 5;
 }
-message CreateResponse {
-  string message = 1;
-  uint32 code = 2;
+message CreateLogResponse {
+  uint32 code = 1;
+  string message = 2;
   // 空值无用意
   string data = 3;
 }
 
-message FindByIdRequest {
-  string id = 1;
-}
-message FindByIdResponse {
-  string message = 1;
-  uint32 code = 2;
-  Server data = 3;
-}
-
-message List {
+message LogList {
   int64 total = 1;
   repeated Server list = 2;
 }
-message FindListRequest {
+message GetLogListRequest {
   uint64 page = 1;
   uint64 page_size = 2;
-  string keyword = 3;
+  string search_key = 3;
 
   string start_time = 4;
   string end_time = 5;
@@ -101,28 +86,27 @@ message FindListRequest {
   string app_id = 8;
   string id = 9;
 }
-message FindListResponse {
-  string message = 1;
-  uint32 code = 2;
-  List data = 3;
+message GetLogListResponse {
+  uint32 code = 1;
+  string message = 2;
+  LogList data = 3;
 }
 
-message DeleteByIdRequest {
+message GetLogInfoRequest {
   string id = 1;
 }
-message DeleteByIdResponse {
-  string message = 1;
-  uint32 code = 2;
-  // 空值无用意
-  string data = 3;
+message GetLogInfoResponse {
+  uint32 code = 1;
+  string message = 2;
+  Server data = 3;
 }
 
-message DeleteByIdsRequest {
-  repeated string ids = 1;
+message DeleteLogRequest {
+  string id = 1;
 }
-message DeleteByIdsResponse {
-  string message = 1;
-  uint32 code = 2;
+message DeleteLogResponse {
+  uint32 code = 1;
+  string message = 2;
   // 空值无用意
   string data = 3;
 }
