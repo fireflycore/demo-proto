@@ -8,44 +8,45 @@ import "protoc-gen-openapiv2/options/annotations.proto";
 
 service ConfigService {
   // 获取配置
-  rpc Get(GetRequest) returns (GetResponse);
+  rpc GetConfig(GetConfigRequest) returns (GetConfigResponse);
+
   // 创建配置
-  rpc Create(CreateRequest) returns (CreateResponse) {
+  rpc CreateConfig(CreateConfigRequest) returns (CreateConfigResponse) {
     option (google.api.http) = {
       post: "/v1/config",
       body: "*",
     };
   };
-  // 根据id查询配置
-  rpc FindById(FindByIdRequest) returns (FindByIdResponse) {
-    option (google.api.http) = {
-      get: "/v1/config",
-    };
-  }
-  // 查询配置列表
-  rpc FindList(FindListRequest) returns (FindListResponse) {
+  // 获取配置列表
+  rpc GetConfigList(GetConfigListRequest) returns (GetConfigListResponse) {
     option (google.api.http) = {
       get: "/v1/config/list"
     };
   };
-  // 根据id删除配置
-  rpc DeleteById(DeleteByIdRequest) returns (DeleteByIdResponse) {
+  // 获取配置信息
+  rpc GetConfigInfo(GetConfigInfoRequest) returns (GetConfigInfoResponse) {
     option (google.api.http) = {
-      delete: "/v1/config/{id}"
+      get: "/v1/config",
+    };
+  }
+  // 删除配置
+  rpc DeleteConfig(DeleteConfigRequest) returns (DeleteConfigResponse) {
+    option (google.api.http) = {
+      delete: "/v1/config"
     };
   };
 
-  // 设置版本
-  rpc SetVersion(SetVersionRequest) returns (SetVersionResponse) {
+  // 设置配置版本
+  rpc SetConfigVersion(SetConfigVersionRequest) returns (SetConfigVersionResponse) {
     option (google.api.http) = {
       put: "/v1/config/version",
       body: "*",
     };
   };
-  // 查询历史版本配置列表
-  rpc FindHistoryVersion(FindHistoryVersionRequest) returns (FindHistoryVersionResponse) {
+  // 获取其历史版本配置列表
+  rpc GetConfigHistoryList(GetConfigHistoryListRequest) returns (GetConfigHistoryListResponse) {
     option (google.api.http) = {
-      get: "/v1/config/history"
+      get: "/v1/config/history/list"
     };
   };
 }
@@ -69,37 +70,12 @@ message Config {
   // 应用id
   string app_id = 8;
 
-
   string id = 9;
   string created_at = 10;
+  string updated_at = 11;
 }
 
-message ConfigCenterMeta {
-  // 应用id
-  string app_id = 1 [(buf.validate.field).string.uuid = true];
-  // 配置组
-  string group = 2 [(buf.validate.field).required = true];
-  // 环境
-  string env = 3 [(buf.validate.field).required = true];
-  // 配置项
-  string key = 4 [(buf.validate.field).required = true];
-}
-
-message CreateRequest {
-  ConfigCenterMeta meta = 1 [(buf.validate.field).required = true];
-  // 配置内容
-  string content = 2 [(buf.validate.field).required = true];
-  // 配置版本
-  string version = 3 [(buf.validate.field).required = true];
-}
-message CreateResponse {
-  string message = 1;
-  uint32 code = 2;
-  // 空值无用意
-  string data = 3;
-}
-
-message GetRequest {
+message GetConfigRequest {
   // 服务名
   string app_id = 1 [(buf.validate.field).string.uuid = true];
   // 配置组
@@ -109,26 +85,37 @@ message GetRequest {
   // 配置项
   string key = 4 [(buf.validate.field).required = true];
 }
-message GetResponse {
-  string message = 1;
-  uint32 code = 2;
+message GetConfigResponse {
+  uint32 code = 1;
+  string message = 2;
   Config data = 3;
 }
 
-message FindByIdRequest {
-  string id = 1 [(buf.validate.field).required = true];
+message ConfigMeta {
+  // 应用id
+  string app_id = 1 [(buf.validate.field).string.uuid = true];
+  // 配置组
+  string group = 2 [(buf.validate.field).required = true];
+  // 环境
+  string env = 3 [(buf.validate.field).required = true];
+  // 配置项
+  string key = 4 [(buf.validate.field).required = true];
 }
-message FindByIdResponse {
-  string message = 1;
-  uint32 code = 2;
-  Config data = 3;
+message CreateConfigRequest {
+  ConfigMeta meta = 1 [(buf.validate.field).required = true];
+  // 配置内容
+  string content = 2 [(buf.validate.field).required = true];
+  // 配置版本
+  string version = 3 [(buf.validate.field).required = true];
+}
+message CreateConfigResponse {
+  uint32 code = 1;
+  string message = 2;
+  // 空值无用意
+  string data = 3;
 }
 
-message List {
-  int64 total = 1;
-  repeated ListItem list = 2;
-}
-message ListItem {
+message ConfigItem {
   // 应用id
   string app_id = 1;
   // 配置组
@@ -147,8 +134,13 @@ message ListItem {
 
   string id = 8;
   string created_at = 9;
+  string updated_at = 10;
 }
-message FindListRequest {
+message ConfigList {
+  int64 total = 1;
+  repeated ConfigItem list = 2;
+}
+message GetConfigListRequest {
   uint64 page = 1;
   uint64 page_size = 2;
   // 应用id
@@ -160,33 +152,42 @@ message FindListRequest {
   // 配置项
   string key = 6;
 }
-message FindListResponse {
-  string message = 1;
-  uint32 code = 2;
-  List data = 3;
+message GetConfigListResponse {
+  uint32 code = 1;
+  string message = 2;
+  ConfigList data = 3;
 }
 
-message DeleteByIdRequest {
+message GetConfigInfoRequest {
   string id = 1 [(buf.validate.field).required = true];
 }
-message DeleteByIdResponse {
-  string message = 1;
-  uint32 code = 2;
+message GetConfigInfoResponse {
+  uint32 code = 1;
+  string message = 2;
+  Config data = 3;
+}
+
+message DeleteConfigRequest {
+  string id = 1 [(buf.validate.field).required = true];
+}
+message DeleteConfigResponse {
+  uint32 code = 1;
+  string message = 2;
   // 空值无用意
   string data = 3;
 }
 
-message SetVersionRequest {
+message SetConfigVersionRequest {
   string id = 1 [(buf.validate.field).required = true];
 }
-message SetVersionResponse {
-  string message = 1;
-  uint32 code = 2;
+message SetConfigVersionResponse {
+  uint32 code = 1;
+  string message = 2;
   // 空值无用意
   string data = 3;
 }
 
-message FindHistoryVersionRequest {
+message GetConfigHistoryListRequest {
   uint64 page = 1;
   uint64 page_size = 2;
   // 应用id
@@ -200,10 +201,10 @@ message FindHistoryVersionRequest {
   // 版本号
   string version = 7;
 }
-message FindHistoryVersionResponse {
-  string message = 1;
-  uint32 code = 2;
-  List data = 3;
+message GetConfigHistoryListResponse {
+  uint32 code = 1;
+  string message = 2;
+  ConfigList data = 3;
 }
 
 

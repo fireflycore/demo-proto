@@ -1,0 +1,18 @@
+syntax="proto3";
+
+package acme.config.v1;
+
+import "acme/basic/v1/token.proto";
+
+message Token {
+  // token类型 1-jwt 2-session
+  basic.v1.TokenMode mode = 1;
+  // token用途 1-用户 2-服务
+  basic.v1.TokenPurpose purpose = 2;
+  // 访问token过期时间-适用于jwt-分钟
+  uint32 access_expired = 3;
+  // 访问token过期时间-适用于jwt-分钟
+  uint32 refresh_expired = 4;
+  // token过期时间-适用于session-分钟
+  uint32 session_expired = 5;
+}
