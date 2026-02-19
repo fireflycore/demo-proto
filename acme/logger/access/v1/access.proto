@@ -5,10 +5,6 @@ package acme.logger.access.v1;
 import "google/api/annotations.proto";
 import "protoc-gen-openapiv2/options/annotations.proto";
 
-import "acme/basic/v1/request.proto";
-import "acme/basic/v1/system.proto";
-import "acme/basic/v1/client.proto";
-
 service AccessLoggerService {
   // 创建访问日志
   rpc CreateLog(CreateLogRequest) returns (CreateLogResponse) {};
@@ -34,7 +30,7 @@ service AccessLoggerService {
 
 message Access {
   // 请求方式
-  int32 method = 1;
+  uint32 method = 1;
   // 请求路径
   string path = 2;
   // 原始请求内容
@@ -53,45 +49,43 @@ message Access {
   // 来源地址，一般是nginx解析出来的来源地址
   string source_address = 9;
 
-  // 系统类型
-  int32 system_type = 10;
   // 客户端类型
-  int32 client_type = 11;
-  // 设备形态
-  int32 device_form_factor = 12;
-
+  uint32 client_type = 10;
   // 客户端名称
-  string client_name = 13;
+  string client_name = 11;
   // 客户端版本
-  string client_version = 14;
+  string client_version = 12;
+
+  // 系统类型
+  uint32 system_type = 13;
   // 系统名称
-  string system_name = 15;
+  string system_name = 14;
   // 系统版本
-  string system_version = 16;
+  string system_version = 15;
   // 应用版本
-  string app_version = 17;
+  string app_version = 16;
 
   // 发起调用服务的应用ID
-  string invoke_service_app_id = 18;
+  string invoke_service_app_id = 17;
   // 发起调用服务的地址
-  string invoke_service_endpoint = 19;
+  string invoke_service_endpoint = 18;
   // 目标服务的应用ID
-  string target_service_app_id = 20;
+  string target_service_app_id = 19;
   // 目标服务的地址
-  string target_service_endpoint = 21;
+  string target_service_endpoint = 20;
 
-  string trace_id = 22;
-  string user_id = 23;
-  string app_id = 24;
+  string trace_id = 21;
+  string user_id = 22;
+  string app_id = 23;
 
-  string id = 25;
-  string created_at = 26;
-  string updated_at = 27;
+  string id = 24;
+  string created_at = 25;
+  string updated_at = 26;
 }
 
 message CreateLogRequest {
   // 请求方式
-  basic.v1.RequestMethod method = 1;
+  uint32 method = 1;
   // 请求路径
   string path = 2;
   // 原始请求内容
@@ -110,15 +104,15 @@ message CreateLogRequest {
   // 来源地址，一般是nginx解析出来的来源地址
   string source_address = 9;
 
-  // 系统类型
-  basic.v1.SystemType system_type = 10;
   // 客户端类型
-  basic.v1.ClientType client_type = 11;
-
+  uint32 client_type = 10;
   // 客户端名称
-  string client_name = 12;
+  string client_name = 11;
   // 客户端版本
-  string client_version = 13;
+  string client_version = 12;
+
+  // 系统类型
+  uint32 system_type = 13;
   // 系统名称
   string system_name = 14;
   // 系统版本
@@ -148,7 +142,7 @@ message CreateLogResponse {
 
 message LogItem {
   // 请求方式
-  int32 method = 1;
+  uint32 method = 1;
   // 请求路径
   string path = 2;
   // 耗时
@@ -163,15 +157,15 @@ message LogItem {
   // 来源地址，一般是nginx解析出来的来源地址
   string source_address = 7;
 
-  // 系统类型
-  int32 system_type = 8;
   // 客户端类型
-  int32 client_type = 9;
-
+  uint32 client_type = 8;
   // 客户端名称
-  string client_name = 10;
+  string client_name = 9;
   // 客户端版本
-  string client_version = 11;
+  string client_version = 10;
+
+  // 系统类型
+  uint32 system_type = 11;
   // 系统名称
   string system_name = 12;
   // 系统版本
@@ -209,11 +203,11 @@ message GetLogListRequest {
   string end_time = 5;
 
   // 请求方式
-  basic.v1.RequestMethod method = 6;
+  uint32 method = 6;
   // 系统类型
-  basic.v1.SystemType system_type = 7;
+  uint32 system_type = 7;
   // 客户端类型
-  basic.v1.ClientType client_type = 8;
+  uint32 client_type = 8;
 
   // 客户端名称
   string client_name = 9;

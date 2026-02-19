@@ -5,8 +5,6 @@ package acme.logger.server.v1;
 import "google/api/annotations.proto";
 import "protoc-gen-openapiv2/options/annotations.proto";
 
-import "acme/basic/v1/logger.proto";
-
 service ServerLoggerService {
   // 创建服务端日志
   rpc CreateLog(CreateLogRequest) returns (CreateLogResponse) {};
@@ -32,7 +30,7 @@ service ServerLoggerService {
 
 message Server {
   // 日志级别
-  int32 level = 1;
+  uint32 level = 1;
   // 日志内容
   string content = 2;
   // 记录日志文件路径
@@ -50,7 +48,7 @@ message Server {
 
 message CreateLogRequest {
   // 日志级别
-  basic.v1.LoggerLevel level = 1;
+  uint32 level = 1;
   // 日志内容
   string content = 2;
   // 记录日志文件路径
@@ -58,8 +56,10 @@ message CreateLogRequest {
 
   // 链路id
   string trace_id = 4;
+  // 用户id
+  string user_id = 5;
   // 应用id
-  string app_id = 5;
+  string app_id = 6;
 }
 message CreateLogResponse {
   uint32 code = 1;
@@ -80,7 +80,7 @@ message GetLogListRequest {
   string start_time = 4;
   string end_time = 5;
 
-  basic.v1.LoggerLevel level = 6;
+  uint32 level = 6;
 
   string trace_id = 7;
   string app_id = 8;

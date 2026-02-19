@@ -5,10 +5,6 @@ package acme.logger.client.v1;
 import "google/api/annotations.proto";
 import "protoc-gen-openapiv2/options/annotations.proto";
 
-import "acme/basic/v1/system.proto";
-import "acme/basic/v1/client.proto";
-import "acme/basic/v1/logger.proto";
-
 service ClientLoggerService {
   // 创建客户端日志
   rpc CreateLog(CreateLogRequest) returns (CreateLogResponse) {
@@ -43,17 +39,17 @@ message Client {
   // 日志内容
   string content = 2;
   // 日志级别
-  int32 level = 3;
+  uint32 level = 3;
+
+  // 客户端类型
+  uint32 client_type = 4;
+  // 客户端名称
+  string client_name = 5;
+  // 客户端版本
+  string client_version = 6;
 
   // 系统类型
-  int32 system_type = 4;
-  // 客户端类型
-  int32 client_type = 5;
-
-  // 客户端名称
-  string client_name = 6;
-  // 客户端版本
-  string client_version = 7;
+  uint32 system_type = 7;
   // 系统名称
   string system_name = 8;
   // 系统版本
@@ -61,14 +57,16 @@ message Client {
   // 应用版本
   string app_version= 10;
 
+  // 链路id
+  string trace_id = 11;
   // 用户id
-  string user_id = 11;
+  string user_id = 12;
   // 应用id
-  string app_id = 12;
+  string app_id = 13;
 
-  string id = 13;
-  string created_at = 14;
-  string updated_at = 15;
+  string id = 14;
+  string created_at = 15;
+  string updated_at = 16;
 }
 
 message CreateLogRequest {
@@ -77,31 +75,32 @@ message CreateLogRequest {
   // 日志内容
   string content = 2;
   // 日志级别
-  basic.v1.LoggerLevel level = 3;
+  uint32 level = 3;
+
+  // 客户端类型
+  uint32 client_type = 4;
+  // 客户端名称
+  string client_name = 5;
+  // 客户端版本
+  string client_version = 6;
 
   // 系统类型
-  basic.v1.SystemType system_type = 4;
-  // 客户端类型
-  basic.v1.ClientType client_type = 5;
-
-  // 客户端名称
-  string client_name = 7;
-  // 客户端版本
-  string client_version = 8;
+  uint32 system_type = 7;
   // 系统名称
-  string system_name = 9;
+  string system_name = 8;
   // 系统版本
-  string system_version = 10;
+  string system_version = 9;
   // 应用版本
-  string app_version= 11;
+  string app_version= 10;
 
+  string trace_id = 11;
   // 用户id
   string user_id = 12;
   // 应用id
   string app_id = 13;
 }
 message CreateLogResponse {
- uint32 code = 1;
+  uint32 code = 1;
   string message = 2;
   // 空值无用意
   string data = 3;
@@ -120,11 +119,11 @@ message GetLogListRequest {
   string end_time = 5;
 
   // 日志级别
-  basic.v1.LoggerLevel level = 6;
+  uint32 level = 6;
   // 系统类型
-  basic.v1.SystemType system_type = 7;
+  uint32 system_type = 7;
   // 客户端类型
-  basic.v1.ClientType client_type = 8;
+  uint32 client_type = 8;
 
   // 客户端名称
   string client_name = 10;

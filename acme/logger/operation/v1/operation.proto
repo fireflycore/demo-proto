@@ -5,9 +5,6 @@ package acme.logger.operation.v1;
 import "google/api/annotations.proto";
 import "protoc-gen-openapiv2/options/annotations.proto";
 
-import "acme/basic/v1/logger.proto";
-import "acme/basic/v1/database.proto";
-
 service OperationLoggerService {
   // 创建操作日志
   rpc CreateLog(CreateLogRequest) returns (CreateLogResponse) {};
@@ -44,9 +41,9 @@ message Operation {
   uint64 duration = 5;
 
   // 日志级别
-  int32 level = 6;
+  uint32 level = 6;
   // 数据库类型
-  int32 type = 7;
+  uint32 type = 7;
 
   // 用户id
   string user_id = 8;
@@ -76,9 +73,9 @@ message CreateLogRequest {
   uint64 duration = 5;
 
   // 日志级别
-  basic.v1.LoggerLevel level = 6;
+  uint32 level = 6;
   // 数据库类型
-  basic.v1.DatabaseType type = 7;
+  uint32 type = 7;
 
   // 用户id
   string user_id = 8;
@@ -110,9 +107,9 @@ message GetLogListRequest {
   string end_time = 5;
 
   // 日志级别
-  basic.v1.LoggerLevel level = 6;
+  uint32 level = 6;
   // 数据库类型
-  basic.v1.DatabaseType type = 7;
+  uint32 type = 7;
 
   string user_id = 8;
   string trace_id = 9;
