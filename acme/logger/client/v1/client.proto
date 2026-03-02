@@ -57,16 +57,20 @@ message Client {
   // 应用版本
   string app_version= 10;
 
-  // 链路id
-  string trace_id = 11;
-  // 用户id
-  string user_id = 12;
-  // 应用id
-  string app_id = 13;
+  string parent_id = 11;
+  string trace_id = 12;
+  string span_id = 13;
 
-  string id = 14;
-  string created_at = 15;
-  string updated_at = 16;
+  // 用户id
+  string user_id = 14;
+  // 应用id
+  string app_id = 15;
+   // 租户id
+  string tenant_id = 16;
+
+  string id = 17;
+  string created_at = 18;
+  string updated_at = 19;
 }
 
 message CreateLogRequest {
@@ -93,11 +97,16 @@ message CreateLogRequest {
   // 应用版本
   string app_version= 10;
 
-  string trace_id = 11;
+  string parent_id = 11;
+  string trace_id = 12;
+  string span_id = 13;
+
   // 用户id
-  string user_id = 12;
+  string user_id = 14;
   // 应用id
-  string app_id = 13;
+  string app_id = 15;
+  // 租户id
+  string tenant_id = 16;
 }
 message CreateLogResponse {
   uint32 code = 1;
@@ -141,8 +150,11 @@ message GetLogListRequest {
   string user_id = 16;
   // 应用id
   string app_id = 17;
+  // 租户id
+  string tenant_id = 18;
+  
   // 日志id
-  string id = 18;
+  string id = 19;
 }
 message GetLogListResponse {
   uint32 code = 1;
@@ -172,9 +184,9 @@ message DeleteLogResponse {
 // 定义Swagger元信息
 option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
   info: {
-    title: "ClientLogger";
+    title: "ClientLoggerService";
     version: "1.0.0";
-    description: "客户端日志";
+    description: "日志服务-客户端日志";
     contact: {
       name: "梨花炖海棠";
       url: "https://github.com/lhdhtrc";

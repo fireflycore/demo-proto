@@ -36,14 +36,19 @@ message Server {
   // 记录日志文件路径
   string path = 3;
 
-  // 链路id
-  string trace_id = 4;
-  // 应用id
-  string app_id = 5;
+  string parent_id = 4;
+  string trace_id = 5;
 
-  string id = 6;
-  string created_at = 7;
-  string updated_at = 8;
+  // 用户id
+  string user_id = 6;
+  // 应用id
+  string app_id = 7;
+  // 租户id
+  string tenant_id = 8;
+
+  string id = 9;
+  string created_at = 10;
+  string updated_at = 11;
 }
 
 message CreateLogRequest {
@@ -54,12 +59,15 @@ message CreateLogRequest {
   // 记录日志文件路径
   string path = 3;
 
-  // 链路id
-  string trace_id = 4;
+  string parent_id = 4;
+  string trace_id = 5;
+
   // 用户id
-  string user_id = 5;
+  string user_id = 6;
   // 应用id
-  string app_id = 6;
+  string app_id = 7;
+  // 租户id
+  string tenant_id = 8;
 }
 message CreateLogResponse {
   uint32 code = 1;
@@ -83,8 +91,12 @@ message GetLogListRequest {
   uint32 level = 6;
 
   string trace_id = 7;
-  string app_id = 8;
-  string id = 9;
+
+  string user_id = 8;
+  string app_id = 9;
+  string tenant_id = 10;
+
+  string id = 11;
 }
 message GetLogListResponse {
   uint32 code = 1;
@@ -114,9 +126,9 @@ message DeleteLogResponse {
 // 定义Swagger元信息
 option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
   info: {
-    title: "ServerLogger";
+    title: "ServerLoggerService";
     version: "1.0.0";
-    description: "服务端日志";
+    description: "日志服务-服务端日志";
     contact: {
       name: "梨花炖海棠";
       url: "https://github.com/lhdhtrc";

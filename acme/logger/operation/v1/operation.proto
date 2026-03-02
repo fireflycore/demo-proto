@@ -47,17 +47,22 @@ message Operation {
 
   // 用户id
   string user_id = 8;
-  // 链路id
-  string trace_id = 9;
+  // 应用id
+  string app_id = 9;
+  // 租户id
+  string tenant_id = 10;
+
+  string parent_id = 11;
+  string trace_id = 12;
 
   // 目标应用id
-  string target_app_id = 10;
+  string target_app_id = 13;
   // 调用应用id
-  string invoke_app_id = 11;
+  string invoke_app_id = 14;
 
-  string id = 12;
-  string created_at = 13;
-  string updated_at = 14;
+  string id = 15;
+  string created_at = 16;
+  string updated_at = 17;
 }
 
 message CreateLogRequest {
@@ -79,13 +84,18 @@ message CreateLogRequest {
 
   // 用户id
   string user_id = 8;
-  // 链路id
-  string trace_id = 9;
+  // 应用id
+  string app_id = 9;
+  // 租户id
+  string tenant_id = 10;
+
+  string parent_id = 11;
+  string trace_id = 12;
 
   // 目标应用id
-  string target_app_id = 10;
+  string target_app_id = 13;
   // 调用应用id
-  string invoke_app_id = 11;
+  string invoke_app_id = 14;
 }
 message CreateLogResponse {
   uint32 code = 1;
@@ -112,10 +122,14 @@ message GetLogListRequest {
   uint32 type = 7;
 
   string user_id = 8;
-  string trace_id = 9;
-  string target_app_id = 10;
-  string invoke_app_id = 11;
-  string id = 12;
+  string app_id = 9;
+  string tenant_id = 10;
+
+  string trace_id = 11;
+  string target_app_id = 12;
+  string invoke_app_id = 13;
+
+  string id = 14;
 }
 message GetLogListResponse {
   uint32 code = 1;
@@ -145,9 +159,9 @@ message DeleteLogResponse {
 // 定义Swagger元信息
 option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
   info: {
-    title: "OperationLogger";
+    title: "OperationLoggerService";
     version: "1.0.0";
-    description: "操作日志";
+    description: "日志服务-操作日志";
     contact: {
       name: "梨花炖海棠";
       url: "https://github.com/lhdhtrc";

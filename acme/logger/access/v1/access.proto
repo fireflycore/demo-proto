@@ -74,13 +74,17 @@ message Access {
   // 目标服务的地址
   string target_service_endpoint = 20;
 
-  string trace_id = 21;
-  string user_id = 22;
-  string app_id = 23;
+  string parent_id = 21;
+  string trace_id = 22;
+  string span_id = 23;
 
-  string id = 24;
-  string created_at = 25;
-  string updated_at = 26;
+  string user_id = 24;
+  string app_id = 25;
+  string tenant_id = 26;
+
+  string id = 27;
+  string created_at = 28;
+  string updated_at = 29;
 }
 
 message CreateLogRequest {
@@ -129,9 +133,13 @@ message CreateLogRequest {
   // 目标服务的地址
   string target_service_endpoint = 20;
 
-  string trace_id = 21;
-  string user_id = 22;
-  string app_id = 23;
+  string parent_id = 21;
+  string trace_id = 22;
+  string span_id = 23;
+
+  string user_id = 24;
+  string app_id = 25;
+  string tenant_id = 26;
 }
 message CreateLogResponse {
   uint32 code = 1;
@@ -182,13 +190,17 @@ message LogItem {
   // 目标服务的地址
   string target_service_endpoint = 18;
 
-  string trace_id = 19;
-  string user_id = 20;
-  string app_id = 21;
+  string parent_id = 19;
+  string trace_id = 20;
+  string span_id = 21;
 
-  string id = 22;
-  string created_at = 23;
-  string updated_at = 24;
+  string user_id = 22;
+  string app_id = 23;
+  string tenant_id = 24;
+
+  string id = 25;
+  string created_at = 26;
+  string updated_at = 27;
 }
 message LogList {
   int64 total = 1;
@@ -222,12 +234,16 @@ message GetLogListRequest {
 
   // 链路id
   string trace_id = 14;
+  
   // 用户id
   string user_id = 15;
   // 应用id
   string app_id = 16;
+  // 租户id
+  string tenant_id = 17;
+
   // 日志id
-  string id = 17;
+  string id = 18;
 }
 message GetLogListResponse {
   uint32 code = 1;
@@ -257,9 +273,9 @@ message DeleteLogResponse {
 // 定义Swagger元信息
 option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
   info: {
-    title: "AccessLogger";
+    title: "AccessLoggerService";
     version: "1.0.0";
-    description: "访问日志";
+    description: "日志服务-访问日志";
     contact: {
       name: "梨花炖海棠";
       url: "https://github.com/lhdhtrc";
