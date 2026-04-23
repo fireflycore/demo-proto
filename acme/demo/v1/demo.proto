@@ -72,35 +72,23 @@ message CreateDemoRequest {
   // 排序
   uint32 sort = 5;
 }
-message CreateDemoResponse {
-  uint32 code = 1;
-  string message = 2;
-  // 空值无用意
-  optional string data = 3;
-}
+message CreateDemoResponse {}
 
-message DemoList {
-  int64 total = 1;
-  repeated Demo list = 2;
-}
 message GetDemoListRequest {
   uint64 page = 1;
   uint64 page_size = 2;
   string search_key = 3;
 }
 message GetDemoListResponse {
-  uint32 code = 1;
-  string message = 2;
-  DemoList data = 3;
+  int64 total = 1;
+  repeated Demo list = 2;
 }
 
 message GetDemoInfoRequest {
   string id = 1 [(buf.validate.field).string.uuid = true];
 }
 message GetDemoInfoResponse {
-  uint32 code = 1;
-  string message = 2;
-  Demo data = 3;
+  Demo data = 1;
 }
 
 message UpdateDemoRequest {
@@ -111,31 +99,19 @@ message UpdateDemoRequest {
   uint32 status = 5;
   uint32 sort = 6;
 }
-message UpdateDemoResponse {
-  uint32 code = 1;
-  string message = 2;
-  // 空值无用意
-  optional string data = 3;
-}
+message UpdateDemoResponse {}
 
 message DeleteDemoRequest {
   string id = 1 [(buf.validate.field).string.uuid = true];
 }
-message DeleteDemoResponse {
-  uint32 code = 1;
-  string message = 2;
-  // 空值无用意
-  optional string data = 3;
-}
+message DeleteDemoResponse {}
 
 message GetDemoCountRequest {
   // 可选过滤条件
   optional uint32 status = 1 [(buf.validate.field).uint32 = { in: [0, 1, 2] }];
 }
 message GetDemoCountResponse {
-  uint32 code = 1;
-  string message = 2;
-  int64 data = 3;
+  int64 data = 1;
 }
 
 // 定义Swagger元信息
