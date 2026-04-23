@@ -1,0 +1,144 @@
+syntax = "proto3";
+
+package acme.config.version.v1;
+
+import "buf/validate/validate.proto";
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+service ConfigVersionService {
+  // CreateVersion 创建配置版本
+  rpc CreateVersion(CreateVersionRequest) returns (CreateVersionResponse) {
+    option (google.api.http) = {
+      post: "/v1/config/version"
+      body: "*"
+    };
+  }
+
+  // GetVersionList 分页查询配置版本列表
+  rpc GetVersionList(GetVersionListRequest) returns (GetVersionListResponse) {
+    option (google.api.http) = {
+      get: "/v1/config/version/list"
+    };
+  }
+
+  // GetVersionInfo 获取配置版本信息
+  rpc GetVersionInfo(GetVersionInfoRequest) returns (GetVersionInfoResponse) {
+    option (google.api.http) = {
+      get: "/v1/config/version/info"
+    };
+  }
+
+  // UpdateVersion 更新配置版本内容
+  rpc UpdateVersion(UpdateVersionRequest) returns (UpdateVersionResponse) {
+    option (google.api.http) = {
+      put: "/v1/config/version"
+      body: "*"
+    };
+  }
+
+  // DeleteVersion 删除配置版本
+  rpc DeleteVersion(DeleteVersionRequest) returns (DeleteVersionResponse) {
+    option (google.api.http) = {
+      delete: "/v1/config/version"
+    };
+  }
+
+  // PublishVersion 发布指定版本，使其成为当前生效版本
+  rpc PublishVersion(PublishVersionRequest) returns (PublishVersionResponse) {
+    option (google.api.http) = {
+      put: "/v1/config/version/publish"
+      body: "*"
+    };
+  }
+}
+
+message ConfigVersion {
+  // 配置内容
+  string content = 1;
+  // 版本号
+  string version = 2;
+  // 备注
+  string remark = 3;
+
+  // 当前版本是否为当前生效版本
+  bool is_current = 4;
+
+  string config_id = 5;
+
+  string id = 6;
+  string created_at = 7;
+  string updated_at = 8;
+}
+
+message CreateVersionRequest {
+  // 配置内容
+  string content = 1 [(buf.validate.field).required = true];
+  // 版本号
+  string version = 2 [(buf.validate.field).required = true];
+  // 备注
+  string remark = 3;
+
+  string config_id = 4;
+}
+message CreateVersionResponse {}
+
+message GetVersionListRequest {
+  uint64 page = 1;
+  uint64 page_size = 2;
+  string config_id = 3 [(buf.validate.field).string.uuid = true];
+}
+message GetVersionListResponse {
+  int64 total = 1;
+  repeated ConfigVersion list = 2;
+}
+
+message GetVersionInfoRequest {
+  string id = 1 [(buf.validate.field).string.uuid = true];
+}
+message GetVersionInfoResponse {
+  ConfigVersion data = 1;
+}
+
+message UpdateVersionRequest {
+  // 配置内容
+  string content = 1 [(buf.validate.field).required = true];
+  // 版本号
+  string version = 2 [(buf.validate.field).required = true];
+  // 备注
+  string remark = 3;
+
+  string id = 4 [(buf.validate.field).string.uuid = true];
+}
+message UpdateVersionResponse {}
+
+message DeleteVersionRequest {
+  string id = 1 [(buf.validate.field).string.uuid = true];
+}
+message DeleteVersionResponse {}
+
+message PublishVersionRequest {
+  string id = 1 [(buf.validate.field).string.uuid = true];
+}
+message PublishVersionResponse {}
+
+// 定义 Swagger 元信息
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  info: {
+    title: "ConfigVersionService";
+    version: "1.0.0";
+    description: "配置服务-版本管理";
+  };
+  security_definitions: {
+    security: {
+      key: "Authorization"
+      value: {
+        name: "Authorization"
+        in: IN_HEADER
+        type: TYPE_API_KEY
+      }
+    }
+  }
+  consumes: "application/json";
+  produces: "application/json";
+};

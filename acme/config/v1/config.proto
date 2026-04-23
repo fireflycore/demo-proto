@@ -1,4 +1,4 @@
-syntax="proto3";
+syntax = "proto3";
 
 package acme.config.v1;
 
@@ -7,144 +7,101 @@ import "google/api/annotations.proto";
 import "protoc-gen-openapiv2/options/annotations.proto";
 
 service ConfigService {
-  // 获取配置
-  rpc GetConfig(GetConfigRequest) returns (GetConfigResponse);
-
-  // 创建配置
+  // CreateConfig 创建新的配置集合
   rpc CreateConfig(CreateConfigRequest) returns (CreateConfigResponse) {
     option (google.api.http) = {
-      post: "/v1/config",
-      body: "*",
+      post: "/v1/config"
+      body: "*"
     };
-  };
-  // 获取配置列表
+  }
+
+  // GetConfigList 分页查询配置列表
   rpc GetConfigList(GetConfigListRequest) returns (GetConfigListResponse) {
     option (google.api.http) = {
       get: "/v1/config/list"
     };
-  };
-  // 获取配置信息
+  }
+
+  // GetConfigInfo 获取配置信息
   rpc GetConfigInfo(GetConfigInfoRequest) returns (GetConfigInfoResponse) {
     option (google.api.http) = {
-      get: "/v1/config",
+      get: "/v1/config/info"
     };
   }
-  // 删除配置
+
+  // UpdateConfig 更新配置内容
+  rpc UpdateConfig(UpdateConfigRequest) returns (UpdateConfigResponse) {
+    option (google.api.http) = {
+      put: "/v1/config"
+      body: "*"
+    };
+  }
+
+  // DeleteConfig 删除配置
   rpc DeleteConfig(DeleteConfigRequest) returns (DeleteConfigResponse) {
     option (google.api.http) = {
       delete: "/v1/config"
     };
-  };
-
-  // 设置配置版本
-  rpc SetConfigVersion(SetConfigVersionRequest) returns (SetConfigVersionResponse) {
-    option (google.api.http) = {
-      put: "/v1/config/version",
-      body: "*",
-    };
-  };
-  // 获取其历史版本配置列表
-  rpc GetConfigHistoryList(GetConfigHistoryListRequest) returns (GetConfigHistoryListResponse) {
-    option (google.api.http) = {
-      get: "/v1/config/history/list"
-    };
-  };
+  }
 }
 
 message Config {
+  // 配置名称
+  string name = 1;
+  // 配置说明
+  string description = 2;
+  // 标签列表
+  repeated string tags = 3;
+
   // 配置组
-  string group = 1;
+  string group = 4;
   // 环境
-  string env = 2;
-  // 配置项
-  string key = 3;
-  // 配置内容
-  string content = 4;
+  string env = 5;
+  // 配置项键名
+  string key = 6;
   // 配置版本
-  string version = 5;
-  // 是否是当前版本
-  bool is_current = 6;
+  string version = 7;
+  // 是否启用加密
+  bool encrypted = 8;
 
-  // 用户id
-  string user_id = 7;
-  // 应用id
-  string app_id = 8;
+  string app_id = 9;
+  string tenant_id = 10;
 
-  string id = 9;
-  string created_at = 10;
-  string updated_at = 11;
+  string id = 11;
+  string created_at = 12;
+  string updated_at = 13;
+
+  string creator_id = 14;
+  string updater_id = 15;
 }
 
-message GetConfigRequest {
-  // 服务名
-  string app_id = 1 [(buf.validate.field).string.uuid = true];
-  // 配置组
-  string group = 2 [(buf.validate.field).required = true];
-  // 环境
-  string env = 3 [(buf.validate.field).required = true];
-  // 配置项
-  string key = 4 [(buf.validate.field).required = true];
-}
-message GetConfigResponse {
-  uint32 code = 1;
-  string message = 2;
-  Config data = 3;
-}
-
-message ConfigMeta {
-  // 应用id
-  string app_id = 1 [(buf.validate.field).string.uuid = true];
-  // 配置组
-  string group = 2 [(buf.validate.field).required = true];
-  // 环境
-  string env = 3 [(buf.validate.field).required = true];
-  // 配置项
-  string key = 4 [(buf.validate.field).required = true];
-}
 message CreateConfigRequest {
-  ConfigMeta meta = 1 [(buf.validate.field).required = true];
-  // 配置内容
-  string content = 2 [(buf.validate.field).required = true];
-  // 配置版本
-  string version = 3 [(buf.validate.field).required = true];
-}
-message CreateConfigResponse {
-  uint32 code = 1;
-  string message = 2;
-  // 空值无用意
-  string data = 3;
-}
+  // 配置名称
+  string name = 1 [(buf.validate.field).required = true, (buf.validate.field).string.max_len = 500];
+  // 配置说明
+  string description = 2 [(buf.validate.field).string.max_len = 5000];
+  // 标签列表
+  repeated string tags = 3 [(buf.validate.field).repeated.max_items = 100];
 
-message ConfigItem {
-  // 应用id
-  string app_id = 1;
   // 配置组
-  string group = 2;
+  string group = 4 [(buf.validate.field).required = true];
   // 环境
-  string env = 3;
-  // 配置项
-  string key = 4;
-  // 配置版本
-  string version = 5;
-  // 是否是当前版本
-  bool is_current = 6;
+  string env = 5 [(buf.validate.field).required = true];
+  // 配置项键名
+  string key = 6 [(buf.validate.field).required = true];
+  // 是否启用加密
+  bool encrypted = 7;
 
-  // 用户id
-  string user_id = 7;
+  string app_id = 8 [(buf.validate.field).string.uuid = true];
+  string tenant_id = 9 [(buf.validate.field).string.uuid = true];
+}
+message CreateConfigResponse {}
 
-  string id = 8;
-  string created_at = 9;
-  string updated_at = 10;
-}
-message ConfigList {
-  int64 total = 1;
-  repeated ConfigItem list = 2;
-}
 message GetConfigListRequest {
   uint64 page = 1;
   uint64 page_size = 2;
-  // 应用id
-  string app_id = 3;
+  string keyword = 3;
+
   // 配置组
   string group = 4;
   // 环境
@@ -153,72 +110,40 @@ message GetConfigListRequest {
   string key = 6;
 }
 message GetConfigListResponse {
-  uint32 code = 1;
-  string message = 2;
-  ConfigList data = 3;
+  int64 total = 1;
+  repeated Config list = 2;
 }
 
 message GetConfigInfoRequest {
-  string id = 1 [(buf.validate.field).required = true];
+  string id = 1 [(buf.validate.field).string.uuid = true];
 }
 message GetConfigInfoResponse {
-  uint32 code = 1;
-  string message = 2;
-  Config data = 3;
+  Config data = 1;
 }
+
+message UpdateConfigRequest {
+  // 配置名称
+  string name = 1 [(buf.validate.field).required = true, (buf.validate.field).string.max_len = 500];
+  // 配置说明
+  string description = 2 [(buf.validate.field).string.max_len = 5000];
+  // 标签列表
+  repeated string tags = 3 [(buf.validate.field).repeated.max_items = 100];
+
+  string id = 11 [(buf.validate.field).string.uuid = true];
+}
+message UpdateConfigResponse {}
 
 message DeleteConfigRequest {
-  string id = 1 [(buf.validate.field).required = true];
+  string id = 1 [(buf.validate.field).string.uuid = true];
 }
-message DeleteConfigResponse {
-  uint32 code = 1;
-  string message = 2;
-  // 空值无用意
-  string data = 3;
-}
+message DeleteConfigResponse {}
 
-message SetConfigVersionRequest {
-  string id = 1 [(buf.validate.field).required = true];
-}
-message SetConfigVersionResponse {
-  uint32 code = 1;
-  string message = 2;
-  // 空值无用意
-  string data = 3;
-}
-
-message GetConfigHistoryListRequest {
-  uint64 page = 1;
-  uint64 page_size = 2;
-  // 应用id
-  string app_id = 3 [(buf.validate.field).string.uuid = true];
-  // 配置组
-  string group = 4;
-  // 环境
-  string env = 5;
-  // 配置项
-  string key = 6;
-  // 版本号
-  string version = 7;
-}
-message GetConfigHistoryListResponse {
-  uint32 code = 1;
-  string message = 2;
-  ConfigList data = 3;
-}
-
-
-// 定义Swagger元信息
+// 定义 Swagger 元信息
 option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
   info: {
     title: "ConfigService";
     version: "1.0.0";
     description: "配置服务";
-    contact: {
-      name: "梨花炖海棠";
-      url: "https://github.com/lhdhtrc";
-      email: "lhdhtr@gmail.com";
-    };
   };
   security_definitions: {
     security: {
@@ -230,8 +155,6 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
       }
     }
   }
-  host: "192.168.1.100:10000";
-  schemes: [HTTP];
   consumes: "application/json";
   produces: "application/json";
 };

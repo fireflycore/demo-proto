@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package acme.config.v1;
+
+import "acme/basic/v1/tls.proto";
+
+// Consul 定义 Consul 作为运行时配置后端时的连接参数。
+message Consul {
+  // Consul 服务地址。
+  string address = 1;
+  // Consul 访问协议，例如 http 或 https。
+  string scheme = 2;
+  // Consul 数据中心名称。
+  string datacenter = 3;
+  // Consul ACL Token。
+  string token = 4;
+  // Consul TLS 配置。
+  basic.v1.TLS tls = 5;
+}

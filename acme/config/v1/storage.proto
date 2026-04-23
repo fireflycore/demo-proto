@@ -1,19 +1,23 @@
-syntax="proto3";
+syntax = "proto3";
 
 package acme.config.v1;
 
 import "acme/basic/v1/storage.proto";
 
+// Storage 定义对象存储配置。
 message Storage {
-  // 存储类型
+  // 存储类型。
   basic.v1.StorageType type = 1;
-  // 存储桶
+  // 存储桶名称。
   string bucket = 2;
-  // 地区
+  // 存储地区。
   string region = 3;
-  // 前缀
+  // 路径前缀。
   string prefix = 4;
+  // 访问密钥 ID。
   string access_key = 5;
+  // 访问密钥 Secret。
   string secret_key = 6;
+  // 自定义访问端点。
   string endpoint = 7;
 }

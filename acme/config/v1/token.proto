@@ -1,18 +1,19 @@
-syntax="proto3";
+syntax = "proto3";
 
 package acme.config.v1;
 
 import "acme/basic/v1/token.proto";
 
+// Token 定义令牌系统配置。
 message Token {
-  // token类型 1-jwt 2-session
+  // Token 类型。
   basic.v1.TokenMode mode = 1;
-  // token用途 1-用户 2-服务
+  // Token 用途。
   basic.v1.TokenPurpose purpose = 2;
-  // 访问token过期时间-适用于jwt-分钟
+  // Access Token 过期时间，单位为分钟。
   uint32 access_expired = 3;
-  // 访问token过期时间-适用于jwt-分钟
+  // Refresh Token 过期时间，单位为分钟。
   uint32 refresh_expired = 4;
-  // token过期时间-适用于session-分钟
+  // Session 过期时间，单位为分钟。
   uint32 session_expired = 5;
 }
