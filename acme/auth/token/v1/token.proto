@@ -1,0 +1,105 @@
+syntax="proto3";
+
+package acme.auth.token.v1;
+
+import "buf/validate/validate.proto";
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+import "acme/basic/v1/token.proto";
+
+service AuthTokenService {
+  // 生成服务token，用于服务之间认证
+  rpc GenerateServiceToken(GenerateServiceTokenRequest) returns (GenerateServiceTokenResponse) {
+    option (google.api.http) = {
+      post: "/v1/auth/token/service",
+      body: "*",
+    };
+  };
+
+  // 验证token
+  rpc ValidateToken(ValidateTokenRequest) returns (ValidateTokenResponse) {
+    option (google.api.http) = {
+      put: "/v1/auth/token/validate",
+      body: "*",
+    };
+  };
+  // 刷新token
+  rpc RefreshToken(RefreshTokenRequest) returns (RefreshTokenResponse) {
+    option (google.api.http) = {
+      put: "/v1/auth/token/refresh",
+      body: "*",
+    };
+  };
+  // 吊销token
+  rpc RevokeToken(RevokeTokenRequest) returns (RevokeTokenResponse) {
+    option (google.api.http) = {
+      put: "/v1/auth/token/revoke",
+      body: "*",
+    };
+  };
+}
+
+message GenerateServiceTokenRequest {
+  string app_id = 1 [(buf.validate.field).string.uuid = true];
+  string app_secret = 2 [(buf.validate.field).required = true];
+}
+message GenerateServiceTokenResponse {
+  basic.v1.SessionToken data = 1;
+}
+
+message TokenPayload {
+  string session = 1;
+  string user_id = 2;
+  string app_id = 3;
+  string tenant_id = 4;
+  // token 类型
+  basic.v1.TokenType type = 5;
+  // token 模式
+  basic.v1.TokenMode mode = 6;
+  // token 用途
+  basic.v1.TokenPurpose purpose = 7;
+}
+message ValidateTokenRequest {
+  string token = 1 [(buf.validate.field).required = true];
+  string client_ip = 2 [(buf.validate.field).string.ipv4 = true];
+}
+message ValidateTokenResponse {
+  TokenPayload data = 1;
+}
+
+message RefreshTokenRequest {}
+message RefreshTokenResponse {
+  acme.basic.v1.Token data = 1;
+ }
+
+message RevokeTokenRequest {}
+message RevokeTokenResponse {}
+
+// 定义Swagger元信息
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  info: {
+    title: "AuthTokenService";
+    version: "1.0.0";
+    description: "认证/授权服务-令牌";
+    contact: {
+      name: "梨花炖海棠";
+      url: "https://github.com/lhdhtrc";
+      email: "lhdhtr@gmail.com";
+    };
+  };
+  security_definitions: {
+    security: {
+      key: "Authorization"
+      value: {
+        name: "Authorization"
+        in: IN_HEADER
+        type: TYPE_API_KEY
+      }
+    }
+  }
+  host: "192.168.1.100:10000";
+  schemes: [HTTP];
+  consumes: "application/json";
+  produces: "application/json";
+};
